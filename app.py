@@ -148,7 +148,7 @@ def main_app():
         for i in range(st.session_state.num_postes):
             with st.expander(f"Dados para o Poste #{i+1}", expanded=True):
                 
-                nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
+                nome_poste = st.text_input("Nome/ID do Poste:", key=f"nome_poste_{i}")
                 
                 if f"num_dir_{i}" not in st.session_state:
                     st.session_state[f"num_dir_{i}"] = 1
@@ -159,6 +159,7 @@ def main_app():
                 direcoes = []
                 tem_compacta_poste = False
                 
+                # Adicionar campos para cada direção conforme o número de direções
                 for j in range(num_direcoes):
                     st.markdown(f"**Direção {j+1}**")
                     cols = st.columns([1, 2])
