@@ -265,10 +265,7 @@ if 'postes' not in st.session_state:
 with st.form("form_projeto"):
     st.subheader("Configuração do Projeto")
     num_postes = st.number_input("Quantidade de postes a serem calculados:", min_value=1, value=1, step=1)
-
-    # Limpa a lista de postes antes de adicionar novos (solução para duplicidade)
     st.session_state.postes = []
-
     for i in range(num_postes):
         st.markdown(f"---")
         st.markdown(f"### **Poste {i+1}**")
@@ -366,7 +363,6 @@ if 'resultados_finais' in st.session_state and st.session_state.resultados_finai
     output = BytesIO()
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
         df_relatorio.to_excel(writer, index=False, sheet_name='Relatorio')
-        writer.save()
     output.seek(0)
 
     # Botão para download do Excel
