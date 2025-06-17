@@ -284,7 +284,7 @@ if submitted:
                 data=grafico_buffer,
                 file_name=f"grafico_{nome_poste.replace(' ', '_')}.png",
                 mime="image/png",
-                key=f"download_{nome_poste.replace(' ', '_')}"  # Adicionando 'key' único
+                key=f"download_{nome_poste.replace(' ', '_')}_{i}"  # Adicionando índice para garantir unicidade
             )
 
         # Prepara dados para o relatório Excel
