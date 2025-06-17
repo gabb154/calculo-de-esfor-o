@@ -253,7 +253,7 @@ def plotar_e_salvar_grafico(direcoes, nome_poste):
     return resultante_mag, resultante_angulo, buf
 
 # ==============================================================================
-# INTERFACE DO APLICATIVO WEB
+# INTERFACE DO APLICATIVO WEB (DINÂMICA)
 # ==============================================================================
 
 st.set_page_config(layout="wide", page_title="Calculadora de Esforços em Poste")
@@ -261,69 +261,84 @@ st.title("⚙️ Calculadora de Esforços em Poste")
 
 if 'postes' not in st.session_state:
     st.session_state.postes = []
+if 'resultados_finais' not in st.session_state:
+    st.session_state.resultados_finais = []
 
-with st.form("form_projeto"):
-    st.subheader("Configuração do Projeto")
-    num_postes = st.number_input("Quantidade de postes a serem calculados:", min_value=1, value=1, step=1)
+num_postes = st.number_input("Quantidade de postes a serem calculados:", min_value=1, value=1, step=1, key="num_postes")
+
+# Limpa lista a cada alteração do número de postes
+if len(st.session_state.postes) != num_postes:
     st.session_state.postes = []
-    for i in range(num_postes):
-        st.markdown(f"---")
-        st.markdown(f"### **Poste {i+1}**")
-        nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
-        num_direcoes = st.number_input("Número de direções de esforço para este poste:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
-        direcoes = []
-        tem_compacta_poste = False
-        for j in range(num_direcoes):
-            cols = st.columns([1, 2])
-            with cols[0]:
-                st.markdown(f"**Direção {j+1}**")
-                angulo = st.number_input(f"Ângulo (0-360°):", min_value=0.0, max_value=360.0, value=0.0, step=1.0, key=f"angulo_{i}_{j}")
-            with cols[1]:
-                tipos_de_cabo_str = st.multiselect(
-                    "Selecione os tipos de cabo nesta direção:",
-                    options=['COMPACTA', 'SECUNDARIA', 'ILUMINACAO PUBLICA'],
-                    key=f"tipos_{i}_{j}"
-                )
-            esforco_total_direcao = 0
-            for tipo in tipos_de_cabo_str:
-                with st.expander(f"Dados para cabo {tipo} na Direção {j+1}"):
-                    db = TODOS_OS_CABOS[tipo]
-                    if tipo == 'COMPACTA':
-                        tem_compacta_poste = True
-                        opcoes_tensao = sorted(list(set(c['TENSAO'] for c in db)))
-                        tensao_sel = st.selectbox("Tensão:", opcoes_tensao, key=f"tensao_{i}_{j}_{tipo}")
-                        db_filtrado = [c for c in db if c['TENSAO'] == tensao_sel]
-                        opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
-                        cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
-                        vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
-                        esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
-                    else:
-                        opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
-                        fases_sel = st.selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
-                        db_filtrado = [c for c in db if c['FASES'] == fases_sel]
-                        opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
-                        cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
-                        vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
-                        esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
-                    if esforco is not None:
-                        st.info(f"Vão para cálculo: {vao_usado}m -> Esforço: {esforco} daN")
-                        esforco_total_direcao += esforco
-                    else:
-                        st.warning(f"Combinação não encontrada ou vão acima do limite para {tipo} {cabo_sel}mm².")
-            direcoes.append({'id': str(j + 1), 'angulo': angulo, 'esforco_total': esforco_total_direcao})
-        st.session_state.postes.append({'nome_poste': nome_poste, 'direcoes': direcoes, 'tem_compacta': tem_compacta_poste})
-    submitted = st.form_submit_button("Calcular Todos os Postes")
 
-if submitted:
+for i in range(num_postes):
+    st.markdown(f"---")
+    st.markdown(f"### **Poste {i+1}**")
+    nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
+    num_direcoes = st.number_input("Número de direções de esforço para este poste:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
+
+    direcoes = []
+    tem_compacta_poste = False
+
+    for j in range(num_direcoes):
+        st.markdown(f"**Direção {j+1}**")
+        tipo = st.selectbox(
+            "Tipo de cabo:",
+            options=['COMPACTA', 'SECUNDARIA', 'ILUMINACAO PUBLICA'],
+            key=f"tipo_{i}_{j}",
+        )
+        db = TODOS_OS_CABOS[tipo]
+
+        angulo = st.number_input(f"Ângulo (0-360°):", min_value=0.0, max_value=360.0, value=0.0, step=1.0, key=f"angulo_{i}_{j}")
+
+        esforco_total_direcao = 0
+
+        if tipo == 'COMPACTA':
+            tem_compacta_poste = True
+            opcoes_tensao = sorted(list(set(c['TENSAO'] for c in db)))
+            tensao_sel = st.selectbox("Tensão:", opcoes_tensao, key=f"tensao_{i}_{j}")
+            db_filtrado = [c for c in db if c['TENSAO'] == tensao_sel]
+            opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
+            cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
+            vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
+            esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
+
+        else: # SECUNDARIA ou ILUMINACAO
+            opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
+            fases_sel = st.selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
+            db_filtrado = [c for c in db if c['FASES'] == fases_sel]
+            opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
+            cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
+            vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
+            esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
+
+        if esforco is not None:
+            st.info(f"Vão para cálculo: {vao_usado}m -> Esforço: {esforco} daN")
+            esforco_total_direcao += esforco
+        else:
+            st.warning(f"Combinação não encontrada ou vão acima do limite para {tipo} {cabo_sel}mm².")
+
+        direcoes.append({'id': str(j + 1), 'angulo': angulo, 'esforco_total': esforco_total_direcao})
+
+    # Atualiza ou adiciona os postes na sessão
+    if len(st.session_state.postes) < i + 1:
+        st.session_state.postes.append({'nome_poste': nome_poste, 'direcoes': direcoes, 'tem_compacta': tem_compacta_poste})
+    else:
+        st.session_state.postes[i] = {'nome_poste': nome_poste, 'direcoes': direcoes, 'tem_compacta': tem_compacta_poste}
+
+# Botão para calcular todos os postes
+if st.button("Calcular Todos os Postes"):
     st.session_state.resultados_finais = []
     for i, poste_data in enumerate(st.session_state.postes):
         nome_poste = poste_data['nome_poste']
         st.markdown(f"---")
         st.subheader(f"Resultados para o Poste: '{nome_poste}'")
+
         resultante_mag, resultante_angulo, grafico_buffer = plotar_e_salvar_grafico(poste_data['direcoes'], nome_poste)
+
         poste_rec = "Nenhum esforço aplicado."
         if resultante_mag > 0:
             poste_rec = recomendar_poste(resultante_mag, poste_data['tem_compacta'])
+
         col1, col2 = st.columns(2)
         with col1:
             st.metric(label="Força Resultante Calculada", value=f"{resultante_mag:.2f} daN")
@@ -338,15 +353,17 @@ if submitted:
                 mime="image/png",
                 key=f"download_button_{i}_{nome_poste}"
             )
+
         relatorio_poste = {'ID do Poste': nome_poste}
         for j, direcao in enumerate(poste_data['direcoes']):
             relatorio_poste[f'Esforço Direção {j+1} (daN)'] = f"{direcao['esforco_total']:.2f}"
             relatorio_poste[f'Ângulo Direção {j+1} (°)'] = f"{direcao['angulo']:.1f}"
+
         relatorio_poste['Resultante Final (daN)'] = f"{resultante_mag:.2f}"
         relatorio_poste['Ângulo da Resultante (°)'] = f"{resultante_angulo:.1f}"
         relatorio_poste['Poste Recomendado'] = poste_rec
         st.session_state.resultados_finais.append(relatorio_poste)
-    st.session_state.postes = []
+    # st.session_state.postes = []  # Mantenha para edição interativa
 
 # --- Download do Relatório Final ---
 if 'resultados_finais' in st.session_state and st.session_state.resultados_finais:
