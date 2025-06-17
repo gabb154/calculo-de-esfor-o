@@ -1,0 +1,7 @@
+    ```text
+    streamlit
+    numpy
+    matplotlib
+    pandas
+    openpyxl
+    ```
