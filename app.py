@@ -208,35 +208,36 @@ def plotar_e_salvar_grafico(direcoes, nome_poste):
     plt.close(fig)
     return resultante_mag, resultante_angulo, buf
 
-def create_ui():
+def main_app():
     st.set_page_config(layout="wide", page_title="Calculadora de Esforços em Poste")
     st.title("⚙️ Calculadora de Esforços em Poste")
 
-    if 'resultados' not in st.session_state:
-        st.session_state.resultados = []
+    if 'num_postes' not in st.session_state:
+        st.session_state.num_postes = 1
+    
+    st.sidebar.header("Configuração do Projeto")
+    num_postes = st.sidebar.number_input("Quantidade de postes a serem calculados:", min_value=1, value=st.session_state.num_postes, step=1, key="num_postes_input")
+    
+    if st.session_state.num_postes != num_postes:
+        st.session_state.num_postes = num_postes
+        st.experimental_rerun()
 
-    with st.sidebar:
-        st.header("Configuração do Projeto")
-        if 'num_postes' not in st.session_state:
-            st.session_state.num_postes = 1
-        
-        st.number_input("Quantidade de postes a serem calculados:", min_value=1, value=st.session_state.num_postes, step=1, key="num_postes_input", on_change=lambda: st.session_state.update(num_postes=st.session_state.num_postes_input))
-
-    all_postes_data = []
-
-    with st.form("form_projeto"):
-        for i in range(st.session_state.get('num_postes', 1)):
-            with st.expander(f"Dados para o Poste #{i+1}", expanded=True):
-                nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
-                num_direcoes = st.number_input("Número de direções de esforço:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
+    with st.form(key='projeto_form'):
+        all_postes_data = []
+        for i in range(st.session_state.num_postes):
+            with st.expander(f"Poste #{i+1}", expanded=True):
+                
+                nome_poste = st.text_input("Nome/ID do Poste:", key=f"nome_{i}")
+                
+                num_direcoes = st.number_input("Número de Direções:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
                 
                 direcoes = []
                 tem_compacta_poste = False
+                
                 for j in range(num_direcoes):
                     st.markdown(f"**Direção {j+1}**")
                     cols = st.columns([1, 2])
                     angulo = cols[0].number_input(f"Ângulo (0-360°):", min_value=0.0, max_value=360.0, value=0.0, step=1.0, key=f"angulo_{i}_{j}")
-                    
                     tipos_selecionados = cols[1].multiselect(
                         "Selecione os tipos de cabo:",
                         options=list(TODOS_OS_CABOS.keys()),
@@ -275,25 +276,25 @@ def create_ui():
 
         submitted = st.form_submit_button("Calcular Projeto", type="primary")
 
-        if submitted:
-            st.session_state.resultados = []
-            for poste_data in all_postes_data:
-                if not poste_data['nome_poste']: continue 
-                
-                resultante_mag, resultante_angulo, grafico_buffer = plotar_e_salvar_grafico(poste_data['direcoes'], poste_data['nome_poste'])
-                poste_rec = recomendar_poste(resultante_mag, poste_data['tem_compacta'])
-                
-                relatorio_poste = {'ID do Poste': poste_data['nome_poste']}
-                for k, direcao in enumerate(poste_data['direcoes']):
-                    relatorio_poste[f'Esforço Direção {k+1} (daN)'] = f"{direcao['esforco_total']:.2f}"
-                    relatorio_poste[f'Ângulo Direção {k+1} (°)'] = f"{direcao['angulo']:.1f}"
-                
-                relatorio_poste['Resultante Final (daN)'] = f"{resultante_mag:.2f}"
-                relatorio_poste['Ângulo da Resultante (°)'] = f"{resultante_angulo:.1f}"
-                relatorio_poste['Poste Recomendado'] = poste_rec
-                relatorio_poste['grafico_buffer'] = grafico_buffer
-                
-                st.session_state.resultados.append(relatorio_poste)
+    if submitted:
+        st.session_state.resultados = []
+        for poste_data in all_postes_data:
+            if not poste_data['nome_poste']: continue
+            
+            resultante_mag, resultante_angulo, grafico_buffer = plotar_e_salvar_grafico(poste_data['direcoes'], poste_data['nome_poste'])
+            poste_rec = recomendar_poste(resultante_mag, poste_data['tem_compacta'])
+            
+            relatorio_poste = {'ID do Poste': poste_data['nome_poste']}
+            for k, direcao in enumerate(poste_data['direcoes']):
+                relatorio_poste[f'Esforço Direção {k+1} (daN)'] = f"{direcao['esforco_total']:.2f}"
+                relatorio_poste[f'Ângulo Direção {k+1} (°)'] = f"{direcao['angulo']:.1f}"
+            
+            relatorio_poste['Resultante Final (daN)'] = f"{resultante_mag:.2f}"
+            relatorio_poste['Ângulo da Resultante (°)'] = f"{resultante_angulo:.1f}"
+            relatorio_poste['Poste Recomendado'] = poste_rec
+            relatorio_poste['grafico_buffer'] = grafico_buffer
+            
+            st.session_state.resultados.append(relatorio_poste)
 
     if st.session_state.resultados:
         st.header("Resultados do Projeto")
