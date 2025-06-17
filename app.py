@@ -34,32 +34,6 @@ def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     linha_selecionada = min(opcoes_vao_validas, key=lambda x: x['VAO_M'])
     return linha_selecionada['Y_DAN'], linha_selecionada['VAO_M']
 
-def recomendar_poste(esforco_requerido, tem_compacta):
-    if esforco_requerido is None or math.isnan(esforco_requerido):
-        return "Esforço requerido inválido"
-    
-    if tem_compacta is None:
-        return "Valor de 'tem_compacta' inválido"
-
-    # Garantir que o valor de tem_compacta seja um booleano
-    if not isinstance(tem_compacta, bool):
-        return "Valor de 'tem_compacta' deve ser um booleano"
-
-    esforco_final_para_busca = max(esforco_requerido, 400)
-    
-    postes_disponiveis = DB_POSTES
-    if tem_compacta:
-        postes_filtrados_altura = [p for p in postes_disponiveis if p['Altura_m'] >= 12]
-    else:
-        postes_filtrados_altura = [p for p in postes_disponiveis if p['Altura_m'] >= 9]
-
-    postes_adequados = [p for p in postes_filtrados_altura if p['Resistencia_daN'] >= esforco_final_para_busca]
-    if not postes_adequados:
-        return f"Nenhum poste com altura requerida suporta {esforco_final_para_busca:.2f} daN."
-    
-    poste_recomendado = min(postes_adequados, key=lambda x: x['Resistencia_daN'])
-    return f"{poste_recomendado['Codificacao']} ({poste_recomendado['Resistencia_daN']} daN)"
-
 def plotar_e_salvar_grafico(direcoes, nome_poste):
     fig, ax = plt.subplots(figsize=(8, 8))
     cores = ['#007bff', '#28a745', '#dc3545', '#17a2b8', '#ffc107', '#6f42c1']
