@@ -20,10 +20,6 @@ TODOS_OS_CABOS = {
     'SECUNDARIA': DB_SECUNDARIA
 }
 
-# ============================================================================== 
-# LÓGICA DO APLICATIVO WEB COM STREAMLIT 
-# ============================================================================== 
-
 def get_options(db, filter_key=None, filter_value=None): 
     """Retorna uma lista de opções únicas e ordenadas de um banco de dados.""" 
     if filter_key and filter_value is not None: 
@@ -117,11 +113,13 @@ with st.form("form_projeto"):
                 tipos_de_cabo_str = st.multiselect(
                     "Selecione os tipos de cabo nesta direção:",
                     options=['COMPACTA', 'SECUNDARIA', 'ILUMINACAO PUBLICA'],
-                    key=f"tipos_{i}_{j}"
+                    key=f"tipos_{i}_{j}",
+                    help="Selecione o tipo de cabo e os campos relacionados a ele aparecerão automaticamente."
                 )
 
             esforco_total_direcao = 0
 
+            # Criar campos de entrada automaticamente após selecionar os tipos de cabo
             for tipo in tipos_de_cabo_str:
                 with st.expander(f"Dados para cabo {tipo} na Direção {j+1}"):
                     db = TODOS_OS_CABOS[tipo]
