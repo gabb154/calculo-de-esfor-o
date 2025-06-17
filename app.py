@@ -14,34 +14,11 @@ DB_SECUNDARIA = [
     {'FASES': 3, 'CABO': 120, 'VAO_M': 15, 'Y_DAN': 88}, {'FASES': 3, 'CABO': 120, 'VAO_M': 20, 'Y_DAN': 156},
     {'FASES': 3, 'CABO': 120, 'VAO_M': 25, 'Y_DAN': 244}, {'FASES': 3, 'CABO': 120, 'VAO_M': 30, 'Y_DAN': 351},
     {'FASES': 3, 'CABO': 120, 'VAO_M': 35, 'Y_DAN': 478}, {'FASES': 3, 'CABO': 120, 'VAO_M': 40, 'Y_DAN': 527},
-    {'FASES': 3, 'CABO': 70, 'VAO_M': 5, 'Y_DAN': 7}, {'FASES': 3, 'CABO': 70, 'VAO_M': 10, 'Y_DAN': 26},
-    {'FASES': 3, 'CABO': 70, 'VAO_M': 15, 'Y_DAN': 57}, {'FASES': 3, 'CABO': 70, 'VAO_M': 20, 'Y_DAN': 100},
-    {'FASES': 3, 'CABO': 70, 'VAO_M': 25, 'Y_DAN': 156}, {'FASES': 3, 'CABO': 70, 'VAO_M': 30, 'Y_DAN': 224},
-    {'FASES': 3, 'CABO': 70, 'VAO_M': 35, 'Y_DAN': 305}, {'FASES': 3, 'CABO': 70, 'VAO_M': 40, 'Y_DAN': 398},
-    {'FASES': 3, 'CABO': 35, 'VAO_M': 5, 'Y_DAN': 4}, {'FASES': 3, 'CABO': 35, 'VAO_M': 10, 'Y_DAN': 16},
-    {'FASES': 3, 'CABO': 35, 'VAO_M': 15, 'Y_DAN': 34}, {'FASES': 3, 'CABO': 35, 'VAO_M': 20, 'Y_DAN': 57},
-    {'FASES': 3, 'CABO': 35, 'VAO_M': 25, 'Y_DAN': 88}, {'FASES': 3, 'CABO': 35, 'VAO_M': 30, 'Y_DAN': 126},
-    {'FASES': 3, 'CABO': 35, 'VAO_M': 35, 'Y_DAN': 172}, {'FASES': 3, 'CABO': 35, 'VAO_M': 40, 'Y_DAN': 225},
-    {'FASES': 3, 'CABO': 35, 'VAO_M': 45, 'Y_DAN': 285}, {'FASES': 3, 'CABO': 35, 'VAO_M': 50, 'Y_DAN': 303},
-    {'FASES': 3, 'CABO': 35, 'VAO_M': 55, 'Y_DAN': 350}, {'FASES': 3, 'CABO': 35, 'VAO_M': 60, 'Y_DAN': 400},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 5, 'Y_DAN': 1}, {'FASES': 1, 'CABO': 25, 'VAO_M': 10, 'Y_DAN': 5},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 15, 'Y_DAN': 12}, {'FASES': 1, 'CABO': 25, 'VAO_M': 20, 'Y_DAN': 21},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 25, 'Y_DAN': 32}, {'FASES': 1, 'CABO': 25, 'VAO_M': 30, 'Y_DAN': 47},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 35, 'Y_DAN': 64}, {'FASES': 1, 'CABO': 25, 'VAO_M': 40, 'Y_DAN': 83},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 45, 'Y_DAN': 101}, {'FASES': 1, 'CABO': 25, 'VAO_M': 50, 'Y_DAN': 125},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 55, 'Y_DAN': 151}, {'FASES': 1, 'CABO': 25, 'VAO_M': 60, 'Y_DAN': 180},
 ]
 
 DB_COMPACTA = [
     {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 15, 'Y_DAN': 342}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 20, 'Y_DAN': 349},
     {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 25, 'Y_DAN': 355}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 30, 'Y_DAN': 365},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 35, 'Y_DAN': 386}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 40, 'Y_DAN': 405},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 45, 'Y_DAN': 422}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 50, 'Y_DAN': 438},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 55, 'Y_DAN': 451}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 60, 'Y_DAN': 464},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 65, 'Y_DAN': 475}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 70, 'Y_DAN': 485},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 75, 'Y_DAN': 494}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 80, 'Y_DAN': 503},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 85, 'Y_DAN': 510}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 90, 'Y_DAN': 517},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 95, 'Y_DAN': 523}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 100, 'Y_DAN': 529},
 ]
 
 DB_POSTES = [
@@ -49,11 +26,6 @@ DB_POSTES = [
     {'Resistencia_daN': 400, 'Codificacao': '12400', 'Altura_m': 12},
     {'Resistencia_daN': 600, 'Codificacao': '11600', 'Altura_m': 11},
     {'Resistencia_daN': 600, 'Codificacao': '12600', 'Altura_m': 12},
-    {'Resistencia_daN': 1000, 'Codificacao': '111000', 'Altura_m': 11},
-    {'Resistencia_daN': 1000, 'Codificacao': '121000', 'Altura_m': 12},
-    {'Resistencia_daN': 1500, 'Codificacao': '121500', 'Altura_m': 12},
-    {'Resistencia_daN': 1500, 'Codificacao': '141500', 'Altura_m': 14},
-    {'Resistencia_daN': 1500, 'Codificacao': '161500', 'Altura_m': 16},
 ]
 
 TODOS_OS_CABOS = {
@@ -61,6 +33,7 @@ TODOS_OS_CABOS = {
     'SECUNDARIA': DB_SECUNDARIA
 }
 
+# Função para calcular os esforços
 def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     opcoes_cabo_filtrado = [c for c in db if c['CABO'] == cabo_selecionado and all(c.get(k) == v for k, v in kwargs.items())]
     opcoes_vao_validas = [c for c in opcoes_cabo_filtrado if c['VAO_M'] >= vao_usuario]
@@ -71,6 +44,7 @@ def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     linha_selecionada = min(opcoes_vao_validas, key=lambda x: x['VAO_M'])
     return linha_selecionada['Y_DAN'], linha_selecionada['VAO_M']
 
+# Função para recomendar o poste
 def recomendar_poste(esforco_requerido, tem_compacta):
     esforco_final_para_busca = max(esforco_requerido, 400)
     
@@ -87,6 +61,7 @@ def recomendar_poste(esforco_requerido, tem_compacta):
     poste_recomendado = min(postes_adequados, key=lambda x: x['Resistencia_daN'])
     return f"{poste_recomendado['Codificacao']} ({poste_recomendado['Resistencia_daN']} daN)"
 
+# Função para gerar o gráfico
 def plotar_e_salvar_grafico(direcoes, nome_poste):
     fig, ax = plt.subplots(figsize=(8, 8))
     cores = ['#007bff', '#28a745', '#dc3545', '#17a2b8', '#ffc107', '#6f42c1']
@@ -123,6 +98,7 @@ def plotar_e_salvar_grafico(direcoes, nome_poste):
     plt.close(fig)
     return resultante_mag, resultante_angulo, buf
 
+# Função principal para criar a interface
 def main_app():
     st.set_page_config(layout="wide", page_title="Calculadora de Esforços em Poste")
     st.title("⚙️ Calculadora de Esforços em Poste")
@@ -130,13 +106,10 @@ def main_app():
     if 'resultados' not in st.session_state:
         st.session_state.resultados = []
 
-    if 'num_postes' not in st.session_state:
-        st.session_state.num_postes = 1
-        
     num_postes = st.sidebar.number_input(
         "Quantidade de postes a serem calculados:", 
         min_value=1, 
-        value=st.session_state.num_postes, 
+        value=1, 
         step=1, 
         key="num_postes_input"
     )
@@ -144,7 +117,7 @@ def main_app():
     all_postes_data = []
 
     with st.form(key='projeto_form'):
-        for i in range(st.session_state.num_postes):
+        for i in range(num_postes):
             with st.expander(f"Dados para o Poste #{i+1}", expanded=True):
                 
                 nome_poste = st.text_input("Nome/ID do Poste:", key=f"nome_poste_{i}")
@@ -154,7 +127,6 @@ def main_app():
                 direcoes = []
                 tem_compacta_poste = False
                 
-                # Adicionar campos para cada direção conforme o número de direções
                 for j in range(num_direcoes):
                     st.markdown(f"**Direção {j+1}**")
                     cols = st.columns([1, 2])
