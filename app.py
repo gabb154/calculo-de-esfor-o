@@ -91,8 +91,8 @@ def create_ui():
             with st.expander(f"Dados para o Poste #{i+1}", expanded=True):
                 nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
                 
-                # Criação da quantidade de direções de forma dinâmica
-                num_direcoes = st.number_input("Número de direções de esforço:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
+                # Seleção de número de direções, limitando a 6
+                num_direcoes = st.selectbox("Escolha o número de direções de esforço:", [1, 2, 3, 4, 5, 6], key=f"num_dir_{i}")
 
                 # Armazenar o número de direções para o poste
                 st.session_state[f'num_direcoes_{i}'] = num_direcoes
