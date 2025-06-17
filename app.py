@@ -4,11 +4,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from io import BytesIO
 
-# Dados de exemplo para os cabos e postes, apenas para ilustrar
 # =================================================================================================================
-DB_ILUMINACAO = [{'FASES': 1, 'CABO': 16, 'VAO_M': 5, 'Y_DAN': 5}, {'FASES': 1, 'CABO': 16, 'VAO_M': 10, 'Y_DAN': 16},]
+DB_SECUNDARIA = [{'FASES': 3, 'CABO': 120, 'VAO_M': 5, 'Y_DAN': 10}, {'FASES': 3, 'CABO': 120, 'VAO_M': 10, 'Y_DAN': 40}]
 DB_COMPACTA = [{'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 15, 'Y_DAN': 342}]
-DB_POSTES = [{'Resistencia_daN': 400, 'Codificacao': '9400', 'Altura_m': 9}]
+DB_ILUMINACAO = [{'FASES': 1, 'CABO': 16, 'VAO_M': 5, 'Y_DAN': 5}]
 
 TODOS_OS_CABOS = {
     'COMPACTA': DB_COMPACTA,
@@ -50,7 +49,6 @@ def create_ui():
 
     all_postes_data = []
 
-    # Adiciona o formulário de postes e direções
     with st.form(key='projeto_form'):
         for i in range(st.session_state.num_postes):
             with st.expander(f"Dados para o Poste #{i+1}", expanded=True):
@@ -72,7 +70,6 @@ def create_ui():
                 direcoes = []
                 tem_compacta_poste = False
 
-                # Agora, para cada direção, vamos adicionar um botão "Inserir"
                 for j in range(num_direcoes):
                     st.markdown(f"**Direção {j+1}**")
                     cols = st.columns([1, 2])
@@ -84,9 +81,10 @@ def create_ui():
                         key=f"tipos_{i}_{j}"
                     )
 
-                    # Aqui adicionamos o botão "Inserir" para a direção
-                    if st.button(f"Inserir Direção {j+1}", key=f"inserir_{i}_{j}"):
-                        if tipos_selecionados:
+                    # Exibe o botão "Inserir" para atualizar o formulário de cabos
+                    if tipos_selecionados:
+                        if st.button(f"Inserir Direção {j+1}", key=f"inserir_{i}_{j}"):
+                            # Quando o botão "Inserir" é pressionado, exibe os campos para inserir informações dos cabos
                             esforco_total_direcao = 0
                             for tipo in tipos_selecionados:
                                 db = TODOS_OS_CABOS[tipo]
