@@ -4,15 +4,13 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from io import BytesIO
 
-# ==============================================================================
+# ===================================================================
 # BANCO DE DADOS INTERNO (COMPLETO E SEPARADO POR TIPO)
-# ==============================================================================
+# ===================================================================
 
 DB_SECUNDARIA = [
     {'FASES': 3, 'CABO': 120, 'VAO_M': 5, 'Y_DAN': 10}, {'FASES': 3, 'CABO': 120, 'VAO_M': 10, 'Y_DAN': 40},
     {'FASES': 3, 'CABO': 120, 'VAO_M': 15, 'Y_DAN': 88}, {'FASES': 3, 'CABO': 120, 'VAO_M': 20, 'Y_DAN': 156},
-    {'FASES': 3, 'CABO': 120, 'VAO_M': 25, 'Y_DAN': 244}, {'FASES': 3, 'CABO': 120, 'VAO_M': 30, 'Y_DAN': 351},
-    {'FASES': 3, 'CABO': 120, 'VAO_M': 35, 'Y_DAN': 478}, {'FASES': 3, 'CABO': 120, 'VAO_M': 40, 'Y_DAN': 527},
 ]
 
 DB_COMPACTA = [
@@ -32,7 +30,6 @@ TODOS_OS_CABOS = {
     'SECUNDARIA': DB_SECUNDARIA,
 }
 
-# Função para calcular o esforço
 def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     opcoes_cabo_filtrado = [c for c in db if c['CABO'] == cabo_selecionado and all(c.get(k) == v for k, v in kwargs.items())]
     opcoes_vao_validas = [c for c in opcoes_cabo_filtrado if c['VAO_M'] >= vao_usuario]
@@ -43,7 +40,6 @@ def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     linha_selecionada = min(opcoes_vao_validas, key=lambda x: x['VAO_M'])
     return linha_selecionada['Y_DAN'], linha_selecionada['VAO_M']
 
-# Função para recomendar o poste
 def recomendar_poste(esforco_requerido, tem_compacta):
     esforco_final_para_busca = max(esforco_requerido, 400)
     
@@ -60,7 +56,6 @@ def recomendar_poste(esforco_requerido, tem_compacta):
     poste_recomendado = min(postes_adequados, key=lambda x: x['Resistencia_daN'])
     return f"{poste_recomendado['Codificacao']} ({poste_recomendado['Resistencia_daN']} daN)"
 
-# Função para criar o gráfico
 def plotar_e_salvar_grafico(direcoes, nome_poste):
     fig, ax = plt.subplots(figsize=(8, 8))
     cores = ['#007bff', '#28a745', '#dc3545', '#17a2b8', '#ffc107', '#6f42c1']
@@ -97,7 +92,6 @@ def plotar_e_salvar_grafico(direcoes, nome_poste):
     plt.close(fig)
     return resultante_mag, resultante_angulo, buf
 
-# Função para criar a interface
 def create_ui():
     st.set_page_config(layout="wide", page_title="Calculadora de Esforços em Poste")
     st.title("⚙️ Calculadora de Esforços em Poste")
@@ -176,10 +170,10 @@ def create_ui():
                             vao_sel = sub_cols[2].number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
                             esforco, _ = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
 
-                    if esforco is not None:
-                        esforco_total_direcao += esforco
+                        if esforco is not None:
+                            esforco_total_direcao += esforco
                     
-                direcoes.append({'id': str(j + 1), 'angulo': angulo, 'esforco_total': esforco_total_direcao})
+                    direcoes.append({'id': str(j + 1), 'angulo': angulo, 'esforco_total': esforco_total_direcao})
             
                 all_postes_data.append({'nome_poste': nome_poste, 'direcoes': direcoes, 'tem_compacta': tem_compacta_poste})
 
