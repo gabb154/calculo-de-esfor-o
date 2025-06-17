@@ -81,11 +81,11 @@ def create_ui():
                         key=f"tipos_{i}_{j}"
                     )
 
-                    # Exibe o botão "Inserir" para atualizar o formulário de cabos
+                    # Verifica se foi selecionado ao menos um tipo de cabo
                     if tipos_selecionados:
-                        # Exibe o botão "Inserir" após a seleção dos tipos de cabo
-                        inserir_button = st.button(f"Inserir para Direção {j+1}", key=f"inserir_{i}_{j}")
-                        
+                        # Exibe o botão "Inserir" para submeter os tipos de cabos
+                        inserir_button = st.form_submit_button(f"Inserir para Direção {j+1}", key=f"inserir_{i}_{j}")
+
                         if inserir_button:
                             # Quando o botão "Inserir" for pressionado, mostramos o formulário para preencher os dados dos cabos
                             esforco_total_direcao = 0
@@ -118,6 +118,7 @@ def create_ui():
                 
                 all_postes_data.append({'nome_poste': nome_poste, 'direcoes': direcoes, 'tem_compacta': tem_compacta_poste})
 
+        # O botão de submissão do formulário é movido para fora da lógica dos "Inserir"
         submitted = st.form_submit_button("Calcular Projeto", type="primary")
 
     if submitted:
