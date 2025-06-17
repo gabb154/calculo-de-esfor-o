@@ -215,22 +215,19 @@ def main_app():
     if 'resultados' not in st.session_state:
         st.session_state.resultados = []
 
-    with st.sidebar:
-        st.header("Configuração do Projeto")
-        if 'num_postes' not in st.session_state:
-            st.session_state.num_postes = 1
+    if 'num_postes' not in st.session_state:
+        st.session_state.num_postes = 1
         
-        # Use um callback para resetar os resultados se o número de postes mudar
-        def update_num_postes():
-            st.session_state.num_postes = st.session_state.num_postes_input
-            st.session_state.resultados = [] # Reseta os resultados
+    def update_num_postes():
+        st.session_state.num_postes = st.session_state.num_postes_input
+        st.session_state.resultados = []
 
-        st.number_input("Quantidade de postes a serem calculados:", min_value=1, max_value=50, 
-                        value=st.session_state.num_postes, step=1, key="num_postes_input", on_change=update_num_postes)
+    st.sidebar.header("Configuração do Projeto")
+    st.sidebar.number_input("Quantidade de postes a serem calculados:", min_value=1, max_value=50, 
+                    value=st.session_state.num_postes, step=1, key="num_postes_input", on_change=update_num_postes)
     
-    all_postes_data = []
-
     with st.form(key='projeto_form'):
+        all_postes_data = []
         for i in range(st.session_state.num_postes):
             
             with st.container():
@@ -238,18 +235,7 @@ def main_app():
                 st.markdown(f"### **Poste #{i+1}**")
                 nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
                 
-                # Gerenciamento de estado para número de direções
-                if f"num_dir_{i}" not in st.session_state:
-                    st.session_state[f"num_dir_{i}"] = 1
-                
-                num_direcoes = st.number_input(
-                    "Número de Direções:", 
-                    min_value=1, 
-                    value=st.session_state[f"num_dir_{i}"], 
-                    step=1, 
-                    key=f"num_dir_input_{i}"
-                )
-                st.session_state[f"num_dir_{i}"] = num_direcoes
+                num_direcoes = st.number_input("Número de Direções:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
                 
                 direcoes = []
                 tem_compacta_poste = False
@@ -363,4 +349,4 @@ def main_app():
         )
 
 if __name__ == "__main__":
-    create_ui()
+    main_app()
