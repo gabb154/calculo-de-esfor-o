@@ -20,6 +20,10 @@ TODOS_OS_CABOS = {
     'SECUNDARIA': DB_SECUNDARIA
 }
 
+# ============================================================================== 
+# LÓGICA DO APLICATIVO WEB COM STREAMLIT 
+# ============================================================================== 
+
 def get_options(db, filter_key=None, filter_value=None): 
     """Retorna uma lista de opções únicas e ordenadas de um banco de dados.""" 
     if filter_key and filter_value is not None: 
@@ -121,33 +125,34 @@ with st.form("form_projeto"):
 
             # Criar campos de entrada automaticamente após selecionar os tipos de cabo
             for tipo in tipos_de_cabo_str:
-                with st.expander(f"Dados para cabo {tipo} na Direção {j+1}"):
-                    db = TODOS_OS_CABOS[tipo]
+                if tipo in TODOS_OS_CABOS:  # Verifica se o tipo de cabo está disponível
+                    with st.expander(f"Dados para cabo {tipo} na Direção {j+1}"):
+                        db = TODOS_OS_CABOS[tipo]
 
-                    if tipo == 'COMPACTA':
-                        tem_compacta_poste = True
-                        opcoes_tensao = sorted(list(set(c['TENSAO'] for c in db)))
-                        tensao_sel = st.selectbox("Tensão:", opcoes_tensao, key=f"tensao_{i}_{j}_{tipo}")
-                        db_filtrado = [c for c in db if c['TENSAO'] == tensao_sel]
-                        opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
-                        cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
-                        vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
-                        esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
+                        if tipo == 'COMPACTA':
+                            tem_compacta_poste = True
+                            opcoes_tensao = sorted(list(set(c['TENSAO'] for c in db)))
+                            tensao_sel = st.selectbox("Tensão:", opcoes_tensao, key=f"tensao_{i}_{j}_{tipo}")
+                            db_filtrado = [c for c in db if c['TENSAO'] == tensao_sel]
+                            opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
+                            cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
+                            vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
+                            esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
 
-                    else:
-                        opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
-                        fases_sel = st.selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
-                        db_filtrado = [c for c in db if c['FASES'] == fases_sel]
-                        opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
-                        cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
-                        vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
-                        esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
+                        else:
+                            opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
+                            fases_sel = st.selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
+                            db_filtrado = [c for c in db if c['FASES'] == fases_sel]
+                            opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
+                            cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
+                            vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
+                            esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
 
-                    if esforco is not None:
-                        st.info(f"Vão para cálculo: {vao_usado}m -> Esforço: {esforco} daN")
-                        esforco_total_direcao += esforco
-                    else:
-                        st.warning(f"Combinação não encontrada ou vão acima do limite para {tipo} {cabo_sel}mm².")
+                        if esforco is not None:
+                            st.info(f"Vão para cálculo: {vao_usado}m -> Esforço: {esforco} daN")
+                            esforco_total_direcao += esforco
+                        else:
+                            st.warning(f"Combinação não encontrada ou vão acima do limite para {tipo} {cabo_sel}mm².")
 
             direcoes.append({'id': str(j + 1), 'angulo': angulo, 'esforco_total': esforco_total_direcao})
 
