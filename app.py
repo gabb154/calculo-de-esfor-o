@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import math
 from io import BytesIO
 
 # ==============================================================================
@@ -30,9 +29,10 @@ DB_POSTES = [
 
 TODOS_OS_CABOS = {
     'COMPACTA': DB_COMPACTA,
-    'SECUNDARIA': DB_SECUNDARIA
+    'SECUNDARIA': DB_SECUNDARIA,
 }
 
+# Função para calcular o esforço
 def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     opcoes_cabo_filtrado = [c for c in db if c['CABO'] == cabo_selecionado and all(c.get(k) == v for k, v in kwargs.items())]
     opcoes_vao_validas = [c for c in opcoes_cabo_filtrado if c['VAO_M'] >= vao_usuario]
@@ -43,6 +43,7 @@ def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     linha_selecionada = min(opcoes_vao_validas, key=lambda x: x['VAO_M'])
     return linha_selecionada['Y_DAN'], linha_selecionada['VAO_M']
 
+# Função para recomendar o poste
 def recomendar_poste(esforco_requerido, tem_compacta):
     esforco_final_para_busca = max(esforco_requerido, 400)
     
@@ -59,6 +60,7 @@ def recomendar_poste(esforco_requerido, tem_compacta):
     poste_recomendado = min(postes_adequados, key=lambda x: x['Resistencia_daN'])
     return f"{poste_recomendado['Codificacao']} ({poste_recomendado['Resistencia_daN']} daN)"
 
+# Função para criar o gráfico
 def plotar_e_salvar_grafico(direcoes, nome_poste):
     fig, ax = plt.subplots(figsize=(8, 8))
     cores = ['#007bff', '#28a745', '#dc3545', '#17a2b8', '#ffc107', '#6f42c1']
@@ -95,6 +97,7 @@ def plotar_e_salvar_grafico(direcoes, nome_poste):
     plt.close(fig)
     return resultante_mag, resultante_angulo, buf
 
+# Função para criar a interface
 def create_ui():
     st.set_page_config(layout="wide", page_title="Calculadora de Esforços em Poste")
     st.title("⚙️ Calculadora de Esforços em Poste")
@@ -107,7 +110,6 @@ def create_ui():
         if 'num_postes' not in st.session_state:
             st.session_state.num_postes = 1
         
-        # Use um callback para resetar os resultados se o número de postes mudar
         def update_num_postes():
             st.session_state.num_postes = st.session_state.num_postes_input
             st.session_state.resultados = [] # Reseta os resultados
@@ -132,7 +134,8 @@ def create_ui():
                     min_value=1, 
                     value=st.session_state[f"num_dir_{i}"], 
                     step=1, 
-                    key=f"num_dir_input_{i}"
+                    key=f"num_dir_input_{i}",
+                    on_change=lambda i=i: st.session_state.update({f"num_dir_{i}": st.session_state[f"num_dir_input_{i}"]})
                 )
                 st.session_state[f"num_dir_{i}"] = num_direcoes
                 
@@ -147,7 +150,8 @@ def create_ui():
                     tipos_selecionados = cols[1].multiselect(
                         "Selecione os tipos de cabo:",
                         options=list(TODOS_OS_CABOS.keys()),
-                        key=f"tipos_{i}_{j}"
+                        key=f"tipos_{i}_{j}",
+                        on_change=lambda i=i, j=j: st.session_state.update({f"tipos_{i}_{j}": st.session_state[f"tipos_input_{i}_{j}"]})
                     )
                     
                     esforco_total_direcao = 0
