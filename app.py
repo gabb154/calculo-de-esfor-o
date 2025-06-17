@@ -38,55 +38,6 @@ DB_COMPACTA = [
     {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 35, 'Y_DAN': 386}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 40, 'Y_DAN': 405},
     {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 45, 'Y_DAN': 422}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 50, 'Y_DAN': 438},
     {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 55, 'Y_DAN': 451}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 60, 'Y_DAN': 464},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 65, 'Y_DAN': 475}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 70, 'Y_DAN': 485},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 75, 'Y_DAN': 494}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 80, 'Y_DAN': 503},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 85, 'Y_DAN': 510}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 90, 'Y_DAN': 517},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 95, 'Y_DAN': 523}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 100, 'Y_DAN': 529},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 15, 'Y_DAN': 366}, {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 20, 'Y_DAN': 383},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 25, 'Y_DAN': 400}, {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 30, 'Y_DAN': 417},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 35, 'Y_DAN': 444}, {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 40, 'Y_DAN': 468},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 45, 'Y_DAN': 490}, {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 50, 'Y_DAN': 511},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 55, 'Y_DAN': 529}, {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 60, 'Y_DAN': 546},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 65, 'Y_DAN': 561}, {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 70, 'Y_DAN': 575},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 75, 'Y_DAN': 588}, {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 80, 'Y_DAN': 599},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 85, 'Y_DAN': 610}, {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 90, 'Y_DAN': 620},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 95, 'Y_DAN': 629}, {'TENSAO': 15, 'FASES': 3, 'CABO': 70, 'VAO_M': 100, 'Y_DAN': 637},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 15, 'Y_DAN': 442}, {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 20, 'Y_DAN': 487},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 25, 'Y_DAN': 528}, {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 30, 'Y_DAN': 567},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 35, 'Y_DAN': 603}, {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 40, 'Y_DAN': 643},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 45, 'Y_DAN': 680}, {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 50, 'Y_DAN': 714},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 55, 'Y_DAN': 746}, {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 60, 'Y_DAN': 775},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 65, 'Y_DAN': 802}, {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 70, 'Y_DAN': 827},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 75, 'Y_DAN': 850}, {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 80, 'Y_DAN': 872},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 85, 'Y_DAN': 892}, {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 90, 'Y_DAN': 911},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 95, 'Y_DAN': 929}, {'TENSAO': 15, 'FASES': 3, 'CABO': 185, 'VAO_M': 100, 'Y_DAN': 945},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 15, 'Y_DAN': 478}, {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 20, 'Y_DAN': 533},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 25, 'Y_DAN': 584}, {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 30, 'Y_DAN': 631},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 35, 'Y_DAN': 674}, {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 40, 'Y_DAN': 720},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 45, 'Y_DAN': 763}, {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 50, 'Y_DAN': 803},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 55, 'Y_DAN': 840}, {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 60, 'Y_DAN': 875},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 65, 'Y_DAN': 907}, {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 70, 'Y_DAN': 937},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 75, 'Y_DAN': 966}, {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 80, 'Y_DAN': 992},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 85, 'Y_DAN': 1017}, {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 90, 'Y_DAN': 1040},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 95, 'Y_DAN': 1062}, {'TENSAO': 15, 'FASES': 3, 'CABO': 240, 'VAO_M': 100, 'Y_DAN': 1082},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 15, 'Y_DAN': 433}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 20, 'Y_DAN': 475},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 25, 'Y_DAN': 514}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 30, 'Y_DAN': 557},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 35, 'Y_DAN': 600}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 40, 'Y_DAN': 640},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 45, 'Y_DAN': 676}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 50, 'Y_DAN': 710},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 55, 'Y_DAN': 741}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 60, 'Y_DAN': 770},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 65, 'Y_DAN': 797}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 70, 'Y_DAN': 822},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 75, 'Y_DAN': 845}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 80, 'Y_DAN': 867},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 85, 'Y_DAN': 887}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 90, 'Y_DAN': 905},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 95, 'Y_DAN': 923}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 70, 'VAO_M': 100, 'Y_DAN': 939},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 15, 'Y_DAN': 521}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 20, 'Y_DAN': 588},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 25, 'Y_DAN': 650}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 30, 'Y_DAN': 707},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 35, 'Y_DAN': 767}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 40, 'Y_DAN': 822},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 45, 'Y_DAN': 874}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 50, 'Y_DAN': 922},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 55, 'Y_DAN': 966}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 60, 'Y_DAN': 1008},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 65, 'Y_DAN': 1048}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 70, 'Y_DAN': 1085},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 75, 'Y_DAN': 1119}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 80, 'Y_DAN': 1152},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 85, 'Y_DAN': 1183}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 90, 'Y_DAN': 1212},
-    {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 95, 'Y_DAN': 1239}, {'TENSAO': 36.2, 'FASES': 3, 'CABO': 185, 'VAO_M': 100, 'Y_DAN': 1265},
 ]
 
 DB_ILUMINACAO = [
@@ -96,49 +47,14 @@ DB_ILUMINACAO = [
     {'FASES': 1, 'CABO': 16, 'VAO_M': 35, 'Y_DAN': 83}, {'FASES': 1, 'CABO': 16, 'VAO_M': 40, 'Y_DAN': 84},
     {'FASES': 1, 'CABO': 16, 'VAO_M': 45, 'Y_DAN': 85}, {'FASES': 1, 'CABO': 16, 'VAO_M': 50, 'Y_DAN': 86},
     {'FASES': 1, 'CABO': 16, 'VAO_M': 55, 'Y_DAN': 86}, {'FASES': 1, 'CABO': 16, 'VAO_M': 60, 'Y_DAN': 87},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 5, 'Y_DAN': 1}, {'FASES': 1, 'CABO': 25, 'VAO_M': 10, 'Y_DAN': 5},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 15, 'Y_DAN': 12}, {'FASES': 1, 'CABO': 25, 'VAO_M': 20, 'Y_DAN': 21},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 25, 'Y_DAN': 32}, {'FASES': 1, 'CABO': 25, 'VAO_M': 30, 'Y_DAN': 47},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 35, 'Y_DAN': 64}, {'FASES': 1, 'CABO': 25, 'VAO_M': 40, 'Y_DAN': 83},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 45, 'Y_DAN': 101}, {'FASES': 1, 'CABO': 25, 'VAO_M': 50, 'Y_DAN': 125},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 55, 'Y_DAN': 151}, {'FASES': 1, 'CABO': 25, 'VAO_M': 60, 'Y_DAN': 180},
-    {'FASES': 2, 'CABO': 16, 'VAO_M': 5, 'Y_DAN': 6}, {'FASES': 2, 'CABO': 16, 'VAO_M': 10, 'Y_DAN': 21},
-    {'FASES': 2, 'CABO': 16, 'VAO_M': 15, 'Y_DAN': 40}, {'FASES': 2, 'CABO': 16, 'VAO_M': 20, 'Y_DAN': 60},
-    {'FASES': 2, 'CABO': 16, 'VAO_M': 25, 'Y_DAN': 79}, {'FASES': 2, 'CABO': 16, 'VAO_M': 30, 'Y_DAN': 84},
-    {'FASES': 2, 'CABO': 16, 'VAO_M': 35, 'Y_DAN': 85}, {'FASES': 2, 'CABO': 16, 'VAO_M': 40, 'Y_DAN': 86},
-    {'FASES': 2, 'CABO': 16, 'VAO_M': 45, 'Y_DAN': 87}, {'FASES': 2, 'CABO': 16, 'VAO_M': 50, 'Y_DAN': 87},
-    {'FASES': 2, 'CABO': 16, 'VAO_M': 55, 'Y_DAN': 88}, {'FASES': 2, 'CABO': 16, 'VAO_M': 60, 'Y_DAN': 88},
-    {'FASES': 2, 'CABO': 25, 'VAO_M': 5, 'Y_DAN': 7}, {'FASES': 2, 'CABO': 25, 'VAO_M': 10, 'Y_DAN': 27},
-    {'FASES': 2, 'CABO': 25, 'VAO_M': 15, 'Y_DAN': 52}, {'FASES': 2, 'CABO': 25, 'VAO_M': 20, 'Y_DAN': 78},
-    {'FASES': 2, 'CABO': 25, 'VAO_M': 25, 'Y_DAN': 107}, {'FASES': 2, 'CABO': 25, 'VAO_M': 30, 'Y_DAN': 138},
-    {'FASES': 2, 'CABO': 25, 'VAO_M': 35, 'Y_DAN': 128}, {'FASES': 2, 'CABO': 25, 'VAO_M': 40, 'Y_DAN': 130},
-    {'FASES': 2, 'CABO': 25, 'VAO_M': 45, 'Y_DAN': 131}, {'FASES': 2, 'CABO': 25, 'VAO_M': 50, 'Y_DAN': 132},
-    {'FASES': 2, 'CABO': 25, 'VAO_M': 55, 'Y_DAN': 133}, {'FASES': 2, 'CABO': 25, 'VAO_M': 60, 'Y_DAN': 134},
-    {'FASES': 3, 'CABO': 16, 'VAO_M': 5, 'Y_DAN': 7}, {'FASES': 3, 'CABO': 16, 'VAO_M': 10, 'Y_DAN': 25},
-    {'FASES': 3, 'CABO': 16, 'VAO_M': 15, 'Y_DAN': 47}, {'FASES': 3, 'CABO': 16, 'VAO_M': 20, 'Y_DAN': 70},
-    {'FASES': 3, 'CABO': 16, 'VAO_M': 25, 'Y_DAN': 84}, {'FASES': 3, 'CABO': 16, 'VAO_M': 30, 'Y_DAN': 86},
-    {'FASES': 3, 'CABO': 16, 'VAO_M': 35, 'Y_DAN': 85}, {'FASES': 3, 'CABO': 16, 'VAO_M': 40, 'Y_DAN': 87},
-    {'FASES': 3, 'CABO': 16, 'VAO_M': 45, 'Y_DAN': 87}, {'FASES': 3, 'CABO': 16, 'VAO_M': 50, 'Y_DAN': 88},
-    {'FASES': 3, 'CABO': 16, 'VAO_M': 55, 'Y_DAN': 88}, {'FASES': 3, 'CABO': 16, 'VAO_M': 60, 'Y_DAN': 88},
-    {'FASES': 3, 'CABO': 25, 'VAO_M': 5, 'Y_DAN': 9}, {'FASES': 3, 'CABO': 25, 'VAO_M': 10, 'Y_DAN': 32},
-    {'FASES': 3, 'CABO': 25, 'VAO_M': 15, 'Y_DAN': 61}, {'FASES': 3, 'CABO': 25, 'VAO_M': 20, 'Y_DAN': 93},
-    {'FASES': 3, 'CABO': 25, 'VAO_M': 25, 'Y_DAN': 129}, {'FASES': 3, 'CABO': 25, 'VAO_M': 30, 'Y_DAN': 128},
-    {'FASES': 3, 'CABO': 25, 'VAO_M': 35, 'Y_DAN': 130}, {'FASES': 3, 'CABO': 25, 'VAO_M': 40, 'Y_DAN': 132},
-    {'FASES': 3, 'CABO': 25, 'VAO_M': 45, 'Y_DAN': 133}, {'FASES': 3, 'CABO': 25, 'VAO_M': 50, 'Y_DAN': 133},
-    {'FASES': 3, 'CABO': 25, 'VAO_M': 55, 'Y_DAN': 134}, {'FASES': 3, 'CABO': 25, 'VAO_M': 60, 'Y_DAN': 135},
 ]
 
 DB_POSTES = [
-    # Apenas postes com 400 daN ou mais
     {'Resistencia_daN': 400, 'Codificacao': '9400', 'Altura_m': 9},
     {'Resistencia_daN': 400, 'Codificacao': '12400', 'Altura_m': 12},
     {'Resistencia_daN': 600, 'Codificacao': '11600', 'Altura_m': 11},
     {'Resistencia_daN': 600, 'Codificacao': '12600', 'Altura_m': 12},
     {'Resistencia_daN': 1000, 'Codificacao': '111000', 'Altura_m': 11},
-    {'Resistencia_daN': 1000, 'Codificacao': '121000', 'Altura_m': 12},
-    {'Resistencia_daN': 1500, 'Codificacao': '121500', 'Altura_m': 12},
-    {'Resistencia_daN': 1500, 'Codificacao': '141500', 'Altura_m': 14},
-    {'Resistencia_daN': 1500, 'Codificacao': '161500', 'Altura_m': 16},
 ]
 
 TODOS_OS_CABOS = {
@@ -231,6 +147,9 @@ def create_ui():
                 nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
                 num_direcoes = st.number_input("Número de direções de esforço:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
                 
+                # Atualiza o número de direções na sessão
+                st.session_state[f'num_direcoes_{i}'] = num_direcoes
+
                 direcoes = []
                 tem_compacta_poste = False
                 for j in range(num_direcoes):
@@ -306,8 +225,10 @@ def create_ui():
                 st.metric(label="Força Resultante Calculada", value=f"{float(res['Resultante Final (daN)']):.2f} daN")
                 st.metric(label="Ângulo da Resultante", value=f"{float(res['Ângulo da Resultante (°)']):.2f} °")
                 st.success(f"**Poste Recomendado:** {res['Poste Recomendado']}")
+
             with col2:
                 st.image(res['grafico_buffer'], caption=f"Diagrama Vetorial para '{res['ID do Poste']}'")
+            
             st.download_button(
                 label=f"Baixar Gráfico de '{res['ID do Poste']}'",
                 data=res['grafico_buffer'],
