@@ -83,8 +83,11 @@ def create_ui():
 
                     # Exibe o botão "Inserir" para atualizar o formulário de cabos
                     if tipos_selecionados:
-                        if st.button(f"Inserir Direção {j+1}", key=f"inserir_{i}_{j}"):
-                            # Quando o botão "Inserir" é pressionado, exibe os campos para inserir informações dos cabos
+                        # Exibe o botão "Inserir" após a seleção dos tipos de cabo
+                        inserir_button = st.button(f"Inserir para Direção {j+1}", key=f"inserir_{i}_{j}")
+                        
+                        if inserir_button:
+                            # Quando o botão "Inserir" for pressionado, mostramos o formulário para preencher os dados dos cabos
                             esforco_total_direcao = 0
                             for tipo in tipos_selecionados:
                                 db = TODOS_OS_CABOS[tipo]
