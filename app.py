@@ -5,6 +5,10 @@ import pandas as pd
 import math
 from io import BytesIO
 
+# ==============================================================================
+# BANCO DE DADOS INTERNO (COMPLETO E SEPARADO POR TIPO)
+# ==============================================================================
+
 DB_SECUNDARIA = [
     {'FASES': 3, 'CABO': 120, 'VAO_M': 5, 'Y_DAN': 10}, {'FASES': 3, 'CABO': 120, 'VAO_M': 10, 'Y_DAN': 40},
     {'FASES': 3, 'CABO': 120, 'VAO_M': 15, 'Y_DAN': 88}, {'FASES': 3, 'CABO': 120, 'VAO_M': 20, 'Y_DAN': 156},
@@ -125,7 +129,6 @@ DB_ILUMINACAO = [
 ]
 
 DB_POSTES = [
-    # Apenas postes com 400 daN ou mais
     {'Resistencia_daN': 400, 'Codificacao': '9400', 'Altura_m': 9},
     {'Resistencia_daN': 400, 'Codificacao': '12400', 'Altura_m': 12},
     {'Resistencia_daN': 600, 'Codificacao': '11600', 'Altura_m': 11},
@@ -137,16 +140,11 @@ DB_POSTES = [
     {'Resistencia_daN': 1500, 'Codificacao': '161500', 'Altura_m': 16},
 ]
 
-# Unifica todos os bancos de dados de cabos para facilitar a busca
 TODOS_OS_CABOS = {
     'COMPACTA': DB_COMPACTA,
     'SECUNDARIA': DB_SECUNDARIA,
     'ILUMINACAO PUBLICA': DB_ILUMINACAO
 }
-
-# ==============================================================================
-# LÓGICA DO APLICATIVO WEB COM STREAMLIT
-# ==============================================================================
 
 def get_options(db, filter_key=None, filter_value=None):
     if filter_key and filter_value is not None:
@@ -285,7 +283,7 @@ def main_app():
             if submitted:
                 st.session_state.postes_form_data = postes_form_data
                 st.session_state.page = 'details'
-                st.experimental_rerun()
+                st.rerun()
     
     elif st.session_state.page == 'details':
         st.header("Detalhes dos Cabos")
@@ -318,7 +316,7 @@ def main_app():
             if submitted_details:
                 st.session_state.all_postes_data = all_postes_data
                 st.session_state.page = 'results'
-                st.experimental_rerun()
+                st.rerun()
 
     elif st.session_state.page == 'results':
         st.header("Resultados do Projeto")
@@ -381,7 +379,7 @@ def main_app():
             st.session_state.pop('postes_form_data', None)
             st.session_state.pop('all_postes_data', None)
             st.session_state.pop('resultados_finais', None)
-            st.experimental_rerun()
+            st.rerun()
 
 if __name__ == "__main__":
     main_app()
