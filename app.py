@@ -2,11 +2,12 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import math
 from io import BytesIO
 
-# =================================================================================================================
-# Banco de dados de cabos e postes
-# =================================================================================================================
+# ==============================================================================
+# BANCO DE DADOS INTERNO (COMPLETO E SEPARADO POR TIPO)
+# ==============================================================================
 
 DB_SECUNDARIA = [
     {'FASES': 3, 'CABO': 120, 'VAO_M': 5, 'Y_DAN': 10}, {'FASES': 3, 'CABO': 120, 'VAO_M': 10, 'Y_DAN': 40},
@@ -30,7 +31,6 @@ DB_SECUNDARIA = [
     {'FASES': 1, 'CABO': 25, 'VAO_M': 45, 'Y_DAN': 101}, {'FASES': 1, 'CABO': 25, 'VAO_M': 50, 'Y_DAN': 125},
     {'FASES': 1, 'CABO': 25, 'VAO_M': 55, 'Y_DAN': 151}, {'FASES': 1, 'CABO': 25, 'VAO_M': 60, 'Y_DAN': 180},
 ]
-
 
 DB_COMPACTA = [
     {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 15, 'Y_DAN': 342}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 20, 'Y_DAN': 349},
@@ -128,7 +128,6 @@ DB_ILUMINACAO = [
     {'FASES': 3, 'CABO': 25, 'VAO_M': 55, 'Y_DAN': 134}, {'FASES': 3, 'CABO': 25, 'VAO_M': 60, 'Y_DAN': 135},
 ]
 
-
 DB_POSTES = [
     {'Resistencia_daN': 400, 'Codificacao': '9400', 'Altura_m': 9},
     {'Resistencia_daN': 400, 'Codificacao': '12400', 'Altura_m': 12},
@@ -141,15 +140,11 @@ DB_POSTES = [
     {'Resistencia_daN': 1500, 'Codificacao': '161500', 'Altura_m': 16},
 ]
 
-# =================================================================================================================
-
 TODOS_OS_CABOS = {
     'COMPACTA': DB_COMPACTA,
     'SECUNDARIA': DB_SECUNDARIA,
     'ILUMINACAO PUBLICA': DB_ILUMINACAO
 }
-
-# =================================================================================================================
 
 def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     opcoes_cabo_filtrado = [c for c in db if c['CABO'] == cabo_selecionado and all(c.get(k) == v for k, v in kwargs.items())]
@@ -160,6 +155,22 @@ def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
         
     linha_selecionada = min(opcoes_vao_validas, key=lambda x: x['VAO_M'])
     return linha_selecionada['Y_DAN'], linha_selecionada['VAO_M']
+
+def recomendar_poste(esforco_requerido, tem_compacta):
+    esforco_final_para_busca = max(esforco_requerido, 400)
+    
+    postes_disponiveis = DB_POSTES
+    if tem_compacta:
+        postes_filtrados_altura = [p for p in postes_disponiveis if p['Altura_m'] >= 12]
+    else:
+        postes_filtrados_altura = [p for p in postes_disponiveis if p['Altura_m'] >= 9]
+
+    postes_adequados = [p for p in postes_filtrados_altura if p['Resistencia_daN'] >= esforco_final_para_busca]
+    if not postes_adequados:
+        return f"Nenhum poste com altura requerida suporta {esforco_final_para_busca:.2f} daN."
+    
+    poste_recomendado = min(postes_adequados, key=lambda x: x['Resistencia_daN'])
+    return f"{poste_recomendado['Codificacao']} ({poste_recomendado['Resistencia_daN']} daN)"
 
 def plotar_e_salvar_grafico(direcoes, nome_poste):
     fig, ax = plt.subplots(figsize=(8, 8))
@@ -197,69 +208,54 @@ def plotar_e_salvar_grafico(direcoes, nome_poste):
     plt.close(fig)
     return resultante_mag, resultante_angulo, buf
 
-def create_ui():
+def main_app():
     st.set_page_config(layout="wide", page_title="Calculadora de Esforços em Poste")
     st.title("⚙️ Calculadora de Esforços em Poste")
 
     if 'resultados' not in st.session_state:
         st.session_state.resultados = []
 
-    with st.sidebar:
-        st.header("Configuração do Projeto")
-        if 'num_postes' not in st.session_state:
-            st.session_state.num_postes = 1
+    if 'num_postes' not in st.session_state:
+        st.session_state.num_postes = 1
+        
+    def update_num_postes():
+        st.session_state.num_postes = st.session_state.num_postes_input
+        st.session_state.resultados = []
 
-        # Use um callback para resetar os resultados se o número de postes mudar
-        def update_num_postes():
-            st.session_state.num_postes = st.session_state.num_postes_input
-            st.session_state.resultados = []  # Reseta os resultados
-
-        st.number_input("Quantidade de postes a serem calculados:", min_value=1, max_value=50, 
-                        value=st.session_state.num_postes, step=1, key="num_postes_input", on_change=update_num_postes)
-
-    all_postes_data = []
-
-    # Fora do formulário para atualizações automáticas
-    for i in range(st.session_state.num_postes):
-        with st.expander(f"Dados para o Poste #{i + 1}", expanded=True):
-            nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
+    st.sidebar.header("Configuração do Projeto")
+    st.sidebar.number_input("Quantidade de postes a serem calculados:", min_value=1, max_value=50, 
+                    value=st.session_state.num_postes, step=1, key="num_postes_input", on_change=update_num_postes)
+    
+    with st.form(key='projeto_form'):
+        all_postes_data = []
+        for i in range(st.session_state.num_postes):
             
-            # Gerenciamento de estado para número de direções
-            if f"num_dir_{i}" not in st.session_state:
-                st.session_state[f"num_dir_{i}"] = 1
-
-            num_direcoes = st.number_input(
-                "Número de Direções:", 
-                min_value=1, 
-                value=st.session_state[f"num_dir_{i}"], 
-                step=1, 
-                key=f"num_dir_input_{i}"
-            )
-            st.session_state[f"num_dir_{i}"] = num_direcoes
-            
-            direcoes = []
-            tem_compacta_poste = False
-
-            for j in range(num_direcoes):
-                st.markdown(f"**Direção {j+1}**")
-                cols = st.columns([1, 2])
-                angulo = cols[0].number_input(f"Ângulo (0-360°):", min_value=0.0, max_value=360.0, value=0.0, step=1.0, key=f"angulo_{i}_{j}")
+            with st.container():
+                st.markdown(f"---")
+                st.markdown(f"### **Poste #{i+1}**")
+                nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
                 
-                # Multiselect para os tipos de cabo fora do formulário para garantir a atualização automática
-                tipos_selecionados = cols[1].multiselect(
-                    "Selecione os tipos de cabo:",
-                    options=list(TODOS_OS_CABOS.keys()),
-                    key=f"tipos_{i}_{j}",
-                    help="Selecione os cabos a serem utilizados nesta direção"
-                )
-
-                # Atualização da interface para tensão, cabo e vão assim que o tipo de cabo é selecionado
-                if tipos_selecionados:
+                num_direcoes = st.number_input("Número de Direções:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
+                
+                direcoes = []
+                tem_compacta_poste = False
+                
+                for j in range(num_direcoes):
+                    st.markdown(f"**Direção {j+1}**")
+                    cols = st.columns([1, 2])
+                    angulo = cols[0].number_input(f"Ângulo (0-360°):", min_value=0.0, max_value=360.0, value=0.0, step=1.0, key=f"angulo_{i}_{j}")
+                    
+                    tipos_selecionados = cols[1].multiselect(
+                        "Selecione os tipos de cabo:",
+                        options=list(TODOS_OS_CABOS.keys()),
+                        key=f"tipos_{i}_{j}"
+                    )
+                    
                     esforco_total_direcao = 0
                     for tipo in tipos_selecionados:
                         db = TODOS_OS_CABOS[tipo]
                         sub_cols = st.columns(3)
-
+                        
                         if tipo == 'COMPACTA':
                             tem_compacta_poste = True
                             opcoes_tensao = sorted(list(set(c['TENSAO'] for c in db)))
@@ -280,13 +276,11 @@ def create_ui():
 
                         if esforco is not None:
                             esforco_total_direcao += esforco
-
+                    
                     direcoes.append({'id': str(j + 1), 'angulo': angulo, 'esforco_total': esforco_total_direcao})
+                
+                all_postes_data.append({'nome_poste': nome_poste, 'direcoes': direcoes, 'tem_compacta': tem_compacta_poste})
 
-            all_postes_data.append({'nome_poste': nome_poste, 'direcoes': direcoes, 'tem_compacta': tem_compacta_poste})
-
-    # Formulário de submissão com botão de submit
-    with st.form(key='projeto_form'):
         submitted = st.form_submit_button("Calcular Projeto", type="primary")
 
     if submitted:
