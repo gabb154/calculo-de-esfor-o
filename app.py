@@ -260,8 +260,8 @@ def main_app():
             for i in range(num_postes):
                 st.markdown(f"---")
                 st.markdown(f"### **Poste {i+1}**")
-                nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
-                num_direcoes = st.number_input("Número de direções de esforço para este poste:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
+                nome_poste = st.text_input(f"Nome/Identificador do Poste {i+1}:", key=f"nome_poste_{i}")
+                num_direcoes = st.number_input(f"Número de direções de esforço para este poste:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
                 
                 direcoes_form_data = []
                 for j in range(num_direcoes):
@@ -346,7 +346,7 @@ def main_app():
                     data=grafico_buffer,
                     file_name=f"grafico_{nome_poste.replace(' ', '_')}.png",
                     mime="image/png",
-                    key=f"download_button_{i}" # Chave única para o botão de download
+                    key=f"download_button_{i}"
                 )
 
             relatorio_poste = {'ID do Poste': nome_poste}
