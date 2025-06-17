@@ -1,3 +1,4 @@
+
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5,9 +6,9 @@ import pandas as pd
 import math
 from io import BytesIO
 
-# ============================================================================== 
-# BANCO DE DADOS INTERNO (COMPLETO E SEPARADO POR TIPO) 
-# ============================================================================== 
+# ==============================================================================
+# BANCO DE DADOS INTERNO (COMPLETO E SEPARADO POR TIPO)
+# ==============================================================================
 
 DB_SECUNDARIA = [
     {'FASES': 3, 'CABO': 120, 'VAO_M': 5, 'Y_DAN': 10}, {'FASES': 3, 'CABO': 120, 'VAO_M': 10, 'Y_DAN': 40},
@@ -183,33 +184,51 @@ DB_POSTES = [
     {'Resistencia_daN': 1500, 'Codificacao': '161500', 'Altura_m': 16},
 ]
 
+# Unifica todos os bancos de dados de cabos para facilitar a busca
 TODOS_OS_CABOS = {
     'COMPACTA': DB_COMPACTA,
     'SECUNDARIA': DB_SECUNDARIA,
     'ILUMINACAO PUBLICA': DB_ILUMINACAO
 }
 
-# ============================================================================== 
-# LÓGICA DO APLICATIVO WEB COM STREAMLIT 
-# ============================================================================== 
+# ==============================================================================
+# LÓGICA DO APLICATIVO WEB COM STREAMLIT
+# ==============================================================================
 
-def get_options(db, filter_key=None, filter_value=None): 
-    """Retorna uma lista de opções únicas e ordenadas de um banco de dados.""" 
-    if filter_key and filter_value is not None: 
-        return sorted(list(set(c['CABO'] for c in db if c.get(filter_key) == filter_value))) 
-    return sorted(list(set(c[list(c.keys())[0]] for c in db))) 
+def get_options(db, filter_key=None, filter_value=None):
+    """Retorna uma lista de opções únicas e ordenadas de um banco de dados."""
+    if filter_key and filter_value is not None:
+        return sorted(list(set(c['CABO'] for c in db if c.get(filter_key) == filter_value)))
+    return sorted(list(set(c[list(c.keys())[0]] for c in db)))
 
-def find_effort(db, vao_usuario, cabo_selecionado, **kwargs): 
-    """Encontra o esforço para um cabo, usando o vão superior mais próximo.""" 
+def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
+    """Encontra o esforço para um cabo, usando o vão superior mais próximo."""
+    # Filtra por todos os critérios passados (fases, tensao, etc.)
     opcoes_cabo_filtrado = [c for c in db if c['CABO'] == cabo_selecionado and all(c.get(k) == v for k, v in kwargs.items())]
 
     opcoes_vao_validas = [c for c in opcoes_cabo_filtrado if c['VAO_M'] >= vao_usuario]
 
     if not opcoes_vao_validas:
-        return None, None  # Retorna None se não encontrar vão válido
+        return None, None # Retorna None se não encontrar vão válido
 
     linha_selecionada = min(opcoes_vao_validas, key=lambda x: x['VAO_M'])
     return linha_selecionada['Y_DAN'], linha_selecionada['VAO_M']
+
+def recomendar_poste(esforco_requerido, tem_compacta):
+    esforco_final_para_busca = max(esforco_requerido, 400)
+
+    postes_disponiveis = DB_POSTES
+    if tem_compacta:
+        postes_filtrados_altura = [p for p in postes_disponiveis if p['Altura_m'] >= 12]
+    else:
+        postes_filtrados_altura = [p for p in postes_disponiveis if p['Altura_m'] >= 9]
+
+    postes_adequados = [p for p in postes_filtrados_altura if p['Resistencia_daN'] >= esforco_final_para_busca]
+    if not postes_adequados:
+        return f"Nenhum poste com altura requerida suporta {esforco_final_para_busca:.2f} daN."
+
+    poste_recomendado = min(postes_adequados, key=lambda x: x['Resistencia_daN'])
+    return f"{poste_recomendado['Codificacao']} ({poste_recomendado['Resistencia_daN']} daN)"
 
 def plotar_e_salvar_grafico(direcoes, nome_poste):
     """Cria, salva e retorna o buffer de imagem do gráfico."""
@@ -243,14 +262,16 @@ def plotar_e_salvar_grafico(direcoes, nome_poste):
     ax.legend()
     ax.set_aspect('equal', adjustable='box')
 
+    # Salva a imagem em um buffer de memória para download
     buf = BytesIO()
     fig.savefig(buf, format="png", dpi=150)
     plt.close(fig)
     return resultante_mag, resultante_angulo, buf
 
-# ============================================================================== 
-# INTERFACE DO APLICATIVO WEB 
-# ============================================================================== 
+
+# ==============================================================================
+# INTERFACE DO APLICATIVO WEB
+# ==============================================================================
 
 st.set_page_config(layout="wide", page_title="Calculadora de Esforços em Poste")
 st.title("⚙️ Calculadora de Esforços em Poste")
@@ -259,13 +280,10 @@ st.title("⚙️ Calculadora de Esforços em Poste")
 if 'postes' not in st.session_state:
     st.session_state.postes = []
 
-# --- Formulário de Entrada --- 
+# --- Formulário de Entrada ---
 with st.form("form_projeto"):
     st.subheader("Configuração do Projeto")
     num_postes = st.number_input("Quantidade de postes a serem calculados:", min_value=1, value=1, step=1)
-
-    # Limpar a lista de postes antes de preenchê-la
-    st.session_state.postes = []
 
     for i in range(num_postes):
         st.markdown(f"---")
@@ -286,42 +304,40 @@ with st.form("form_projeto"):
                 tipos_de_cabo_str = st.multiselect(
                     "Selecione os tipos de cabo nesta direção:",
                     options=['COMPACTA', 'SECUNDARIA', 'ILUMINACAO PUBLICA'],
-                    key=f"tipos_{i}_{j}",
-                    help="Selecione o tipo de cabo e os campos relacionados a ele aparecerão automaticamente."
+                    key=f"tipos_{i}_{j}"
                 )
 
             esforco_total_direcao = 0
 
-            # Criar campos de entrada automaticamente após selecionar os tipos de cabo
+            # Cria campos de entrada dinamicamente para cada tipo de cabo selecionado
             for tipo in tipos_de_cabo_str:
-                if tipo in TODOS_OS_CABOS:  # Verifica se o tipo de cabo está disponível
-                    with st.expander(f"Dados para cabo {tipo} na Direção {j+1}"):
-                        db = TODOS_OS_CABOS[tipo]
+                with st.expander(f"Dados para cabo {tipo} na Direção {j+1}"):
+                    db = TODOS_OS_CABOS[tipo]
 
-                        if tipo == 'COMPACTA':
-                            tem_compacta_poste = True
-                            opcoes_tensao = sorted(list(set(c['TENSAO'] for c in db)))
-                            tensao_sel = st.selectbox("Tensão:", opcoes_tensao, key=f"tensao_{i}_{j}_{tipo}")
-                            db_filtrado = [c for c in db if c['TENSAO'] == tensao_sel]
-                            opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
-                            cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
-                            vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
-                            esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
+                    if tipo == 'COMPACTA':
+                        tem_compacta_poste = True
+                        opcoes_tensao = sorted(list(set(c['TENSAO'] for c in db)))
+                        tensao_sel = st.selectbox("Tensão:", opcoes_tensao, key=f"tensao_{i}_{j}_{tipo}")
+                        db_filtrado = [c for c in db if c['TENSAO'] == tensao_sel]
+                        opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
+                        cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
+                        vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
+                        esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
 
-                        else:
-                            opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
-                            fases_sel = st.selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
-                            db_filtrado = [c for c in db if c['FASES'] == fases_sel]
-                            opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
-                            cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
-                            vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
-                            esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
+                    else: # SECUNDARIA ou ILUMINACAO
+                        opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
+                        fases_sel = st.selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
+                        db_filtrado = [c for c in db if c['FASES'] == fases_sel]
+                        opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
+                        cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
+                        vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
+                        esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
 
-                        if esforco is not None:
-                            st.info(f"Vão para cálculo: {vao_usado}m -> Esforço: {esforco} daN")
-                            esforco_total_direcao += esforco
-                        else:
-                            st.warning(f"Combinação não encontrada ou vão acima do limite para {tipo} {cabo_sel}mm².")
+                    if esforco is not None:
+                        st.info(f"Vão para cálculo: {vao_usado}m -> Esforço: {esforco} daN")
+                        esforco_total_direcao += esforco
+                    else:
+                        st.warning(f"Combinação não encontrada ou vão acima do limite para {tipo} {cabo_sel}mm².")
 
             direcoes.append({'id': str(j + 1), 'angulo': angulo, 'esforco_total': esforco_total_direcao})
 
@@ -356,8 +372,7 @@ if submitted:
                 label=f"Baixar Gráfico de '{nome_poste}'",
                 data=grafico_buffer,
                 file_name=f"grafico_{nome_poste.replace(' ', '_')}.png",
-                mime="image/png",
-                key=f"download_{nome_poste.replace(' ', '_')}_{i}"  # Adicionando índice para garantir unicidade
+                mime="image/png"
             )
 
         # Prepara dados para o relatório Excel
@@ -371,17 +386,22 @@ if submitted:
         relatorio_poste['Poste Recomendado'] = poste_rec
         st.session_state.resultados_finais.append(relatorio_poste)
 
-# --- Exibição do Relatório Final ---
+    # Limpa o estado para permitir um novo cálculo
+    st.session_state.postes = []
+
+# --- Download do Relatório Final ---
 if 'resultados_finais' in st.session_state and st.session_state.resultados_finais:
     st.markdown("---")
-    st.header("Relatório Final do Projeto")
-    df_resultados = pd.DataFrame(st.session_state.resultados_finais)
-    st.write(df_resultados)
+    st.header("Relatório Final do Projet"
+ in the most up-to-date Canvas "App Web - Calculadora de Esforços em Poste" document above and am asking a query about/based on this code below.
+Instructions to follow:
+  * Don't output/edit the document if the query is Direct/Simple. For example, if the query asks for a simple explanation, output a direct answer.
+  * Make sure to **edit** the document if the query shows the intent of editing the document, in which case output the entire edited document, **not just that section or the edits**.
+    * Don't output the same document/empty document and say that you have edited it.
+    * Don't change unrelated code in the document.
+  * Don't output  and  in your final response.
+  * Any references like "this" or "selected code" refers to the code between  and  tags.
+  * Just acknowledge my request in the introduction.
+  * Make sure to refer to the document as "Canvas" in your response.
 
-    # Botão para download do relatório
-    st.download_button(
-        label="Baixar Relatório Completo",
-        data=df_resultados.to_csv(index=False),
-        file_name="relatorio_final.csv",
-        mime="text/csv"
-    )
+o" in "Relatório Final do Projet" to
