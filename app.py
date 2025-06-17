@@ -138,8 +138,7 @@ def main_app():
         min_value=1, 
         value=st.session_state.num_postes, 
         step=1, 
-        key="num_postes_input",
-        on_change=lambda: st.session_state.update(num_postes=st.session_state.num_postes_input)
+        key="num_postes_input"
     )
 
     all_postes_data = []
@@ -150,11 +149,7 @@ def main_app():
                 
                 nome_poste = st.text_input("Nome/ID do Poste:", key=f"nome_poste_{i}")
                 
-                if f"num_dir_{i}" not in st.session_state:
-                    st.session_state[f"num_dir_{i}"] = 1
-                
-                num_direcoes = st.number_input("Número de Direções:", min_value=1, value=st.session_state[f"num_dir_{i}"], step=1, key=f"num_dir_input_{i}", on_change=lambda i=i: st.session_state.update({f"num_dir_{i}": st.session_state[f"num_dir_input_{i}"]}))
-                st.session_state[f"num_dir_{i}"] = num_direcoes
+                num_direcoes = st.number_input("Número de Direções:", min_value=1, value=1, step=1, key=f"num_dir_input_{i}")
 
                 direcoes = []
                 tem_compacta_poste = False
@@ -165,16 +160,11 @@ def main_app():
                     cols = st.columns([1, 2])
                     angulo = cols[0].number_input(f"Ângulo (0-360°):", min_value=0.0, max_value=360.0, value=0.0, step=1.0, key=f"angulo_{i}_{j}")
                     
-                    if f"tipos_{i}_{j}" not in st.session_state:
-                        st.session_state[f"tipos_{i}_{j}"] = []
-
                     tipos_selecionados = cols[1].multiselect(
                         "Selecione os tipos de cabo:",
                         options=list(TODOS_OS_CABOS.keys()),
-                        key=f"tipos_input_{i}_{j}",
-                        on_change=lambda i=i, j=j: st.session_state.update({f"tipos_{i}_{j}": st.session_state[f"tipos_input_{i}_{j}"]})
+                        key=f"tipos_input_{i}_{j}"
                     )
-                    tipos_selecionados = st.session_state[f"tipos_{i}_{j}"]
                     
                     esforco_total_direcao = 0
                     for tipo in tipos_selecionados:
