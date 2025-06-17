@@ -42,82 +42,81 @@ def create_ui():
         # Use um callback para resetar os resultados se o número de postes mudar
         def update_num_postes():
             st.session_state.num_postes = st.session_state.num_postes_input
-            st.session_state.resultados = [] # Reseta os resultados
+            st.session_state.resultados = []  # Reseta os resultados
 
         st.number_input("Quantidade de postes a serem calculados:", min_value=1, max_value=50, 
                         value=st.session_state.num_postes, step=1, key="num_postes_input", on_change=update_num_postes)
 
     all_postes_data = []
 
-    with st.form(key='projeto_form'):
-        for i in range(st.session_state.num_postes):
-            with st.expander(f"Dados para o Poste #{i+1}", expanded=True):
-                nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
+    # Fora do formulário para atualizações automáticas
+    for i in range(st.session_state.num_postes):
+        with st.expander(f"Dados para o Poste #{i + 1}", expanded=True):
+            nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
+            
+            # Gerenciamento de estado para número de direções
+            if f"num_dir_{i}" not in st.session_state:
+                st.session_state[f"num_dir_{i}"] = 1
+
+            num_direcoes = st.number_input(
+                "Número de Direções:", 
+                min_value=1, 
+                value=st.session_state[f"num_dir_{i}"], 
+                step=1, 
+                key=f"num_dir_input_{i}"
+            )
+            st.session_state[f"num_dir_{i}"] = num_direcoes
+            
+            direcoes = []
+            tem_compacta_poste = False
+
+            for j in range(num_direcoes):
+                st.markdown(f"**Direção {j+1}**")
+                cols = st.columns([1, 2])
+                angulo = cols[0].number_input(f"Ângulo (0-360°):", min_value=0.0, max_value=360.0, value=0.0, step=1.0, key=f"angulo_{i}_{j}")
                 
-                # Gerenciamento de estado para número de direções
-                if f"num_dir_{i}" not in st.session_state:
-                    st.session_state[f"num_dir_{i}"] = 1
-                
-                num_direcoes = st.number_input(
-                    "Número de Direções:", 
-                    min_value=1, 
-                    value=st.session_state[f"num_dir_{i}"], 
-                    step=1, 
-                    key=f"num_dir_input_{i}"
+                # Multiselect para os tipos de cabo fora do formulário para garantir a atualização automática
+                tipos_selecionados = cols[1].multiselect(
+                    "Selecione os tipos de cabo:",
+                    options=list(TODOS_OS_CABOS.keys()),
+                    key=f"tipos_{i}_{j}",
+                    help="Selecione os cabos a serem utilizados nesta direção"
                 )
-                st.session_state[f"num_dir_{i}"] = num_direcoes
-                
-                direcoes = []
-                tem_compacta_poste = False
 
-                for j in range(num_direcoes):
-                    st.markdown(f"**Direção {j+1}**")
-                    cols = st.columns([1, 2])
-                    angulo = cols[0].number_input(f"Ângulo (0-360°):", min_value=0.0, max_value=360.0, value=0.0, step=1.0, key=f"angulo_{i}_{j}")
-                    
-                    # Multiselect para os tipos de cabo, com 'on_change' para atualização automática
-                    tipos_selecionados = cols[1].multiselect(
-                        "Selecione os tipos de cabo:",
-                        options=list(TODOS_OS_CABOS.keys()),
-                        key=f"tipos_{i}_{j}",
-                        help="Selecione os cabos a serem utilizados nesta direção",
-                        on_change=lambda i=i, j=j: st.session_state.update({f"tipos_selecionados_{i}_{j}": tipos_selecionados})
-                    )
+                # Atualização da interface para tensão, cabo e vão assim que o tipo de cabo é selecionado
+                if tipos_selecionados:
+                    esforco_total_direcao = 0
+                    for tipo in tipos_selecionados:
+                        db = TODOS_OS_CABOS[tipo]
+                        sub_cols = st.columns(3)
 
-                    # Verifica se o usuário selecionou algum tipo de cabo
-                    if f"tipos_selecionados_{i}_{j}" in st.session_state and st.session_state[f"tipos_selecionados_{i}_{j}"]:
-                        # Se os tipos de cabo foram selecionados, atualiza o formulário
-                        esforco_total_direcao = 0
-                        for tipo in st.session_state[f"tipos_selecionados_{i}_{j}"]:
-                            db = TODOS_OS_CABOS[tipo]
-                            sub_cols = st.columns(3)
-                            
-                            if tipo == 'COMPACTA':
-                                tem_compacta_poste = True
-                                opcoes_tensao = sorted(list(set(c['TENSAO'] for c in db)))
-                                tensao_sel = sub_cols[0].selectbox("Tensão:", opcoes_tensao, key=f"tensao_{i}_{j}_{tipo}")
-                                db_filtrado = [c for c in db if c['TENSAO'] == tensao_sel]
-                                opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
-                                cabo_sel = sub_cols[1].selectbox(f"Cabo ({tipo}):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
-                                vao_sel = sub_cols[2].number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
-                                esforco, _ = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
-                            else: 
-                                opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
-                                fases_sel = sub_cols[0].selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
-                                db_filtrado = [c for c in db if c['FASES'] == fases_sel]
-                                opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
-                                cabo_sel = sub_cols[1].selectbox(f"Cabo ({tipo}):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
-                                vao_sel = sub_cols[2].number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
-                                esforco, _ = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
+                        if tipo == 'COMPACTA':
+                            tem_compacta_poste = True
+                            opcoes_tensao = sorted(list(set(c['TENSAO'] for c in db)))
+                            tensao_sel = sub_cols[0].selectbox("Tensão:", opcoes_tensao, key=f"tensao_{i}_{j}_{tipo}")
+                            db_filtrado = [c for c in db if c['TENSAO'] == tensao_sel]
+                            opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
+                            cabo_sel = sub_cols[1].selectbox(f"Cabo ({tipo}):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
+                            vao_sel = sub_cols[2].number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
+                            esforco, _ = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
+                        else: 
+                            opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
+                            fases_sel = sub_cols[0].selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
+                            db_filtrado = [c for c in db if c['FASES'] == fases_sel]
+                            opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
+                            cabo_sel = sub_cols[1].selectbox(f"Cabo ({tipo}):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
+                            vao_sel = sub_cols[2].number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
+                            esforco, _ = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
 
-                            if esforco is not None:
-                                esforco_total_direcao += esforco
-                        
-                        direcoes.append({'id': str(j + 1), 'angulo': angulo, 'esforco_total': esforco_total_direcao})
+                        if esforco is not None:
+                            esforco_total_direcao += esforco
 
-                all_postes_data.append({'nome_poste': nome_poste, 'direcoes': direcoes, 'tem_compacta': tem_compacta_poste})
+                    direcoes.append({'id': str(j + 1), 'angulo': angulo, 'esforco_total': esforco_total_direcao})
 
-        # Submissão do formulário
+            all_postes_data.append({'nome_poste': nome_poste, 'direcoes': direcoes, 'tem_compacta': tem_compacta_poste})
+
+    # Formulário de submissão com botão de submit
+    with st.form(key='projeto_form'):
         submitted = st.form_submit_button("Calcular Projeto", type="primary")
 
     if submitted:
