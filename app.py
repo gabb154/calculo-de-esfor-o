@@ -195,13 +195,11 @@ TODOS_OS_CABOS = {
 # ==============================================================================
 
 def get_options(db, filter_key=None, filter_value=None):
-    """Retorna uma lista de opções únicas e ordenadas de um banco de dados."""
     if filter_key and filter_value is not None:
         return sorted(list(set(c['CABO'] for c in db if c.get(filter_key) == filter_value)))
     return sorted(list(set(c[list(c.keys())[0]] for c in db)))
 
 def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
-    """Encontra o esforço para um cabo, usando o vão superior mais próximo."""
     opcoes_cabo_filtrado = [c for c in db if c['CABO'] == cabo_selecionado and all(c.get(k) == v for k, v in kwargs.items())]
     opcoes_vao_validas = [c for c in opcoes_cabo_filtrado if c['VAO_M'] >= vao_usuario]
     if not opcoes_vao_validas:
@@ -265,6 +263,10 @@ if 'postes' not in st.session_state:
 with st.form("form_projeto"):
     st.subheader("Configuração do Projeto")
     num_postes = st.number_input("Quantidade de postes a serem calculados:", min_value=1, value=1, step=1)
+
+    # Limpa a lista de postes antes de adicionar novos (solução para duplicidade)
+    st.session_state.postes = []
+
     for i in range(num_postes):
         st.markdown(f"---")
         st.markdown(f"### **Poste {i+1}**")
