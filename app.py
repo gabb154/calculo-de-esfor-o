@@ -8,9 +8,12 @@ from io import BytesIO
 # BANCO DE DADOS INTERNO (COMPLETO E SEPARADO POR TIPO)
 # ===================================================================
 
-DB_SECUNDARIA = [
-    {'FASES': 3, 'CABO': 120, 'VAO_M': 5, 'Y_DAN': 10}, {'FASES': 3, 'CABO': 120, 'VAO_M': 10, 'Y_DAN': 40},
-    {'FASES': 3, 'CABO': 120, 'VAO_M': 15, 'Y_DAN': 88}, {'FASES': 3, 'CABO': 120, 'VAO_M': 20, 'Y_DAN': 156},
+DB_ILUMINACAO = [
+    {'FASES': 1, 'CABO': 16, 'VAO_M': 5, 'Y_DAN': 5}, {'FASES': 1, 'CABO': 16, 'VAO_M': 10, 'Y_DAN': 16},
+    {'FASES': 1, 'CABO': 16, 'VAO_M': 15, 'Y_DAN': 31}, {'FASES': 1, 'CABO': 16, 'VAO_M': 20, 'Y_DAN': 46},
+    {'FASES': 1, 'CABO': 16, 'VAO_M': 25, 'Y_DAN': 61}, {'FASES': 1, 'CABO': 16, 'VAO_M': 30, 'Y_DAN': 77},
+    {'FASES': 1, 'CABO': 16, 'VAO_M': 35, 'Y_DAN': 83}, {'FASES': 1, 'CABO': 16, 'VAO_M': 40, 'Y_DAN': 84},
+    {'FASES': 1, 'CABO': 16, 'VAO_M': 45, 'Y_DAN': 85}, {'FASES': 1, 'CABO': 16, 'VAO_M': 50, 'Y_DAN': 86},
 ]
 
 DB_COMPACTA = [
@@ -28,6 +31,7 @@ DB_POSTES = [
 TODOS_OS_CABOS = {
     'COMPACTA': DB_COMPACTA,
     'SECUNDARIA': DB_SECUNDARIA,
+    'ILUMINACAO PUBLICA': DB_ILUMINACAO
 }
 
 def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
@@ -143,7 +147,7 @@ def create_ui():
                     
                     tipos_selecionados = cols[1].multiselect(
                         "Selecione os tipos de cabo:",
-                        options=list(TODOS_OS_CABOS.keys()),
+                        options=list(TODOS_OS_CABOS.keys()),  # Inclui 'ILUMINACAO PUBLICA'
                         key=f"tipos_{i}_{j}"
                     )
                     
@@ -161,7 +165,15 @@ def create_ui():
                             cabo_sel = sub_cols[1].selectbox(f"Cabo ({tipo}):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
                             vao_sel = sub_cols[2].number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
                             esforco, _ = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
-                        else: 
+                        elif tipo == 'ILUMINACAO PUBLICA':  # Tratamento específico para Iluminação Pública
+                            opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
+                            fases_sel = sub_cols[0].selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
+                            db_filtrado = [c for c in db if c['FASES'] == fases_sel]
+                            opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
+                            cabo_sel = sub_cols[1].selectbox(f"Cabo ({tipo}):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
+                            vao_sel = sub_cols[2].number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
+                            esforco, _ = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
+                        else:  # Para os tipos de cabos 'SECUNDARIA'
                             opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
                             fases_sel = sub_cols[0].selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
                             db_filtrado = [c for c in db if c['FASES'] == fases_sel]
