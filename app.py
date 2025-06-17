@@ -75,18 +75,20 @@ def create_ui():
                     cols = st.columns([1, 2])
                     angulo = cols[0].number_input(f"Ângulo (0-360°):", min_value=0.0, max_value=360.0, value=0.0, step=1.0, key=f"angulo_{i}_{j}")
                     
-                    # Multiselect para os tipos de cabo
+                    # Multiselect para os tipos de cabo, com 'on_change' para atualização automática
                     tipos_selecionados = cols[1].multiselect(
                         "Selecione os tipos de cabo:",
                         options=list(TODOS_OS_CABOS.keys()),
-                        key=f"tipos_{i}_{j}"
+                        key=f"tipos_{i}_{j}",
+                        help="Selecione os cabos a serem utilizados nesta direção",
+                        on_change=lambda i=i, j=j: st.session_state.update({f"tipos_selecionados_{i}_{j}": tipos_selecionados})
                     )
 
-                    # Se os tipos de cabo foram selecionados, atualiza o formulário de preenchimento
-                    if tipos_selecionados:
-                        # A cada seleção de tipos de cabo, os formulários são atualizados
+                    # Verifica se o usuário selecionou algum tipo de cabo
+                    if f"tipos_selecionados_{i}_{j}" in st.session_state and st.session_state[f"tipos_selecionados_{i}_{j}"]:
+                        # Se os tipos de cabo foram selecionados, atualiza o formulário
                         esforco_total_direcao = 0
-                        for tipo in tipos_selecionados:
+                        for tipo in st.session_state[f"tipos_selecionados_{i}_{j}"]:
                             db = TODOS_OS_CABOS[tipo]
                             sub_cols = st.columns(3)
                             
