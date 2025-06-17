@@ -129,6 +129,7 @@ DB_ILUMINACAO = [
 ]
 
 DB_POSTES = [
+    # Apenas postes com 400 daN ou mais
     {'Resistencia_daN': 400, 'Codificacao': '9400', 'Altura_m': 9},
     {'Resistencia_daN': 400, 'Codificacao': '12400', 'Altura_m': 12},
     {'Resistencia_daN': 600, 'Codificacao': '11600', 'Altura_m': 11},
@@ -322,7 +323,7 @@ def main_app():
         st.header("Resultados do Projeto")
         resultados_finais_para_excel = []
 
-        for poste_data in st.session_state.all_postes_data:
+        for i, poste_data in enumerate(st.session_state.all_postes_data):
             nome_poste = poste_data['nome_poste']
             st.markdown(f"---")
             st.subheader(f"Resultados para o Poste: '{nome_poste}'")
@@ -344,7 +345,8 @@ def main_app():
                     label=f"Baixar Gráfico de '{nome_poste}'",
                     data=grafico_buffer,
                     file_name=f"grafico_{nome_poste.replace(' ', '_')}.png",
-                    mime="image/png"
+                    mime="image/png",
+                    key=f"download_button_{i}" # Chave única para o botão de download
                 )
 
             relatorio_poste = {'ID do Poste': nome_poste}
