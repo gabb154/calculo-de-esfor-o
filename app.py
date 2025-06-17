@@ -208,26 +208,27 @@ def plotar_e_salvar_grafico(direcoes, nome_poste):
     plt.close(fig)
     return resultante_mag, resultante_angulo, buf
 
-def main_app():
+def create_ui():
     st.set_page_config(layout="wide", page_title="Calculadora de Esforços em Poste")
     st.title("⚙️ Calculadora de Esforços em Poste")
 
-    if 'num_postes' not in st.session_state:
-        st.session_state.num_postes = 1
-    
-    st.sidebar.header("Configuração do Projeto")
-    num_postes = st.sidebar.number_input("Quantidade de postes a serem calculados:", min_value=1, value=st.session_state.num_postes, step=1, key="num_postes_input")
-    
-    if st.session_state.num_postes != num_postes:
-        st.session_state.num_postes = num_postes
-        st.experimental_rerun()
+    if 'resultados' not in st.session_state:
+        st.session_state.resultados = []
+
+    with st.sidebar:
+        st.header("Configuração do Projeto")
+        if 'num_postes' not in st.session_state:
+            st.session_state.num_postes = 1
+        
+        st.number_input("Quantidade de postes a serem calculados:", min_value=1, value=st.session_state.num_postes, step=1, key="num_postes_input", on_change=lambda: st.session_state.update(num_postes=st.session_state.num_postes_input))
+
+    all_postes_data = []
 
     with st.form(key='projeto_form'):
-        all_postes_data = []
-        for i in range(st.session_state.num_postes):
+        for i in range(st.session_state.get('num_postes', 1)):
             with st.expander(f"Poste #{i+1}", expanded=True):
                 
-                nome_poste = st.text_input("Nome/ID do Poste:", key=f"nome_{i}")
+                nome_poste = st.text_input("Nome/ID do Poste:", key=f"nome_poste_{i}")
                 
                 num_direcoes = st.number_input("Número de Direções:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
                 
