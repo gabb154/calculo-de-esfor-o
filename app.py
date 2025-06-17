@@ -190,6 +190,7 @@ TODOS_OS_CABOS = {
     'ILUMINACAO PUBLICA': DB_ILUMINACAO
 }
 
+
 # ==============================================================================
 # LÓGICA DO APLICATIVO WEB COM STREAMLIT
 # ==============================================================================
@@ -248,6 +249,7 @@ def plotar_e_salvar_grafico(direcoes, nome_poste):
     buf = BytesIO()
     fig.savefig(buf, format="png", dpi=150)
     plt.close(fig)
+    buf.seek(0)
     return resultante_mag, resultante_angulo, buf
 
 # ==============================================================================
@@ -349,6 +351,29 @@ if submitted:
         st.session_state.resultados_finais.append(relatorio_poste)
     st.session_state.postes = []
 
+# --- Download do Relatório Final ---
 if 'resultados_finais' in st.session_state and st.session_state.resultados_finais:
     st.markdown("---")
     st.header("Relatório Final do Projeto")
+
+    # Cria o DataFrame do relatório
+    df_relatorio = pd.DataFrame(st.session_state.resultados_finais)
+
+    # Exibe o DataFrame
+    st.dataframe(df_relatorio, use_container_width=True)
+
+    # Salva o DataFrame em Excel para download
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df_relatorio.to_excel(writer, index=False, sheet_name='Relatorio')
+        writer.save()
+    output.seek(0)
+
+    # Botão para download do Excel
+    st.download_button(
+        label="📥 Baixar Relatório em Excel",
+        data=output,
+        file_name="relatorio_final_postes.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        key="download_relatorio_excel"
+    )
