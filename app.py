@@ -18,49 +18,10 @@ DB_SECUNDARIA = [
     {'FASES': 3, 'CABO': 70, 'VAO_M': 15, 'Y_DAN': 57}, {'FASES': 3, 'CABO': 70, 'VAO_M': 20, 'Y_DAN': 100},
     {'FASES': 3, 'CABO': 70, 'VAO_M': 25, 'Y_DAN': 156}, {'FASES': 3, 'CABO': 70, 'VAO_M': 30, 'Y_DAN': 224},
     {'FASES': 3, 'CABO': 70, 'VAO_M': 35, 'Y_DAN': 305}, {'FASES': 3, 'CABO': 70, 'VAO_M': 40, 'Y_DAN': 398},
-    {'FASES': 3, 'CABO': 35, 'VAO_M': 5, 'Y_DAN': 4}, {'FASES': 3, 'CABO': 35, 'VAO_M': 10, 'Y_DAN': 16},
-    {'FASES': 3, 'CABO': 35, 'VAO_M': 15, 'Y_DAN': 34}, {'FASES': 3, 'CABO': 35, 'VAO_M': 20, 'Y_DAN': 57},
-    {'FASES': 3, 'CABO': 35, 'VAO_M': 25, 'Y_DAN': 88}, {'FASES': 3, 'CABO': 35, 'VAO_M': 30, 'Y_DAN': 126},
-    {'FASES': 3, 'CABO': 35, 'VAO_M': 35, 'Y_DAN': 172}, {'FASES': 3, 'CABO': 35, 'VAO_M': 40, 'Y_DAN': 225},
-    {'FASES': 3, 'CABO': 35, 'VAO_M': 45, 'Y_DAN': 285}, {'FASES': 3, 'CABO': 35, 'VAO_M': 50, 'Y_DAN': 303},
-    {'FASES': 3, 'CABO': 35, 'VAO_M': 55, 'Y_DAN': 350}, {'FASES': 3, 'CABO': 35, 'VAO_M': 60, 'Y_DAN': 400},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 5, 'Y_DAN': 1}, {'FASES': 1, 'CABO': 25, 'VAO_M': 10, 'Y_DAN': 5},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 15, 'Y_DAN': 12}, {'FASES': 1, 'CABO': 25, 'VAO_M': 20, 'Y_DAN': 21},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 25, 'Y_DAN': 32}, {'FASES': 1, 'CABO': 25, 'VAO_M': 30, 'Y_DAN': 47},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 35, 'Y_DAN': 64}, {'FASES': 1, 'CABO': 25, 'VAO_M': 40, 'Y_DAN': 83},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 45, 'Y_DAN': 101}, {'FASES': 1, 'CABO': 25, 'VAO_M': 50, 'Y_DAN': 125},
-    {'FASES': 1, 'CABO': 25, 'VAO_M': 55, 'Y_DAN': 151}, {'FASES': 1, 'CABO': 25, 'VAO_M': 60, 'Y_DAN': 180},
-]
-
-DB_COMPACTA = [
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 15, 'Y_DAN': 342}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 20, 'Y_DAN': 349},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 25, 'Y_DAN': 355}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 30, 'Y_DAN': 365},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 35, 'Y_DAN': 386}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 40, 'Y_DAN': 405},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 45, 'Y_DAN': 422}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 50, 'Y_DAN': 438},
-    {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 55, 'Y_DAN': 451}, {'TENSAO': 15, 'FASES': 3, 'CABO': 35, 'VAO_M': 60, 'Y_DAN': 464},
-]
-
-DB_ILUMINACAO = [
-    {'FASES': 1, 'CABO': 16, 'VAO_M': 5, 'Y_DAN': 5}, {'FASES': 1, 'CABO': 16, 'VAO_M': 10, 'Y_DAN': 16},
-    {'FASES': 1, 'CABO': 16, 'VAO_M': 15, 'Y_DAN': 31}, {'FASES': 1, 'CABO': 16, 'VAO_M': 20, 'Y_DAN': 46},
-    {'FASES': 1, 'CABO': 16, 'VAO_M': 25, 'Y_DAN': 61}, {'FASES': 1, 'CABO': 16, 'VAO_M': 30, 'Y_DAN': 77},
-    {'FASES': 1, 'CABO': 16, 'VAO_M': 35, 'Y_DAN': 83}, {'FASES': 1, 'CABO': 16, 'VAO_M': 40, 'Y_DAN': 84},
-    {'FASES': 1, 'CABO': 16, 'VAO_M': 45, 'Y_DAN': 85}, {'FASES': 1, 'CABO': 16, 'VAO_M': 50, 'Y_DAN': 86},
-    {'FASES': 1, 'CABO': 16, 'VAO_M': 55, 'Y_DAN': 86}, {'FASES': 1, 'CABO': 16, 'VAO_M': 60, 'Y_DAN': 87},
-]
-
-DB_POSTES = [
-    {'Resistencia_daN': 400, 'Codificacao': '9400', 'Altura_m': 9},
-    {'Resistencia_daN': 400, 'Codificacao': '12400', 'Altura_m': 12},
-    {'Resistencia_daN': 600, 'Codificacao': '11600', 'Altura_m': 11},
-    {'Resistencia_daN': 600, 'Codificacao': '12600', 'Altura_m': 12},
-    {'Resistencia_daN': 1000, 'Codificacao': '111000', 'Altura_m': 11},
 ]
 
 TODOS_OS_CABOS = {
-    'COMPACTA': DB_COMPACTA,
-    'SECUNDARIA': DB_SECUNDARIA,
-    'ILUMINACAO PUBLICA': DB_ILUMINACAO
+    'COMPACTA': DB_SECUNDARIA,
 }
 
 def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
@@ -72,22 +33,6 @@ def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
         
     linha_selecionada = min(opcoes_vao_validas, key=lambda x: x['VAO_M'])
     return linha_selecionada['Y_DAN'], linha_selecionada['VAO_M']
-
-def recomendar_poste(esforco_requerido, tem_compacta):
-    esforco_final_para_busca = max(esforco_requerido, 400)
-    
-    postes_disponiveis = DB_POSTES
-    if tem_compacta:
-        postes_filtrados_altura = [p for p in postes_disponiveis if p['Altura_m'] >= 12]
-    else:
-        postes_filtrados_altura = [p for p in postes_disponiveis if p['Altura_m'] >= 9]
-
-    postes_adequados = [p for p in postes_filtrados_altura if p['Resistencia_daN'] >= esforco_final_para_busca]
-    if not postes_adequados:
-        return f"Nenhum poste com altura requerida suporta {esforco_final_para_busca:.2f} daN."
-    
-    poste_recomendado = min(postes_adequados, key=lambda x: x['Resistencia_daN'])
-    return f"{poste_recomendado['Codificacao']} ({poste_recomendado['Resistencia_daN']} daN)"
 
 def plotar_e_salvar_grafico(direcoes, nome_poste):
     fig, ax = plt.subplots(figsize=(8, 8))
@@ -147,7 +92,7 @@ def create_ui():
                 nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
                 num_direcoes = st.number_input("Número de direções de esforço:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
                 
-                # Atualiza o número de direções na sessão
+                # Armazenar o número de direções para o poste
                 st.session_state[f'num_direcoes_{i}'] = num_direcoes
 
                 direcoes = []
