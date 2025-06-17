@@ -129,6 +129,7 @@ DB_ILUMINACAO = [
 ]
 
 DB_POSTES = [
+    # Apenas postes com 400 daN ou mais
     {'Resistencia_daN': 400, 'Codificacao': '9400', 'Altura_m': 9},
     {'Resistencia_daN': 400, 'Codificacao': '12400', 'Altura_m': 12},
     {'Resistencia_daN': 600, 'Codificacao': '11600', 'Altura_m': 11},
@@ -148,7 +149,6 @@ TODOS_OS_CABOS = {
 
 def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     opcoes_cabo_filtrado = [c for c in db if c['CABO'] == cabo_selecionado and all(c.get(k) == v for k, v in kwargs.items())]
-    
     opcoes_vao_validas = [c for c in opcoes_cabo_filtrado if c['VAO_M'] >= vao_usuario]
     
     if not opcoes_vao_validas:
@@ -218,14 +218,15 @@ def create_ui():
 
     with st.sidebar:
         st.header("Configuração do Projeto")
-        num_postes = st.number_input("Quantidade de postes a serem calculados:", min_value=1, value=st.session_state.get('num_postes', 1), step=1, key="num_postes_input")
-        if st.session_state.get('num_postes') != num_postes:
-            st.session_state.num_postes = num_postes
-    
+        if 'num_postes' not in st.session_state:
+            st.session_state.num_postes = 1
+        
+        st.number_input("Quantidade de postes a serem calculados:", min_value=1, value=st.session_state.num_postes, step=1, key="num_postes")
+
     all_postes_data = []
 
     with st.form("form_projeto"):
-        for i in range(st.session_state.get('num_postes', 1)):
+        for i in range(st.session_state.num_postes):
             with st.expander(f"Dados para o Poste #{i+1}", expanded=True):
                 nome_poste = st.text_input("Nome/Identificador do Poste:", key=f"nome_poste_{i}")
                 num_direcoes = st.number_input("Número de direções de esforço:", min_value=1, value=1, step=1, key=f"num_dir_{i}")
@@ -254,17 +255,17 @@ def create_ui():
                             tensao_sel = sub_cols[0].selectbox("Tensão:", opcoes_tensao, key=f"tensao_{i}_{j}_{tipo}")
                             db_filtrado = [c for c in db if c['TENSAO'] == tensao_sel]
                             opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
-                            cabo_sel = sub_cols[1].selectbox("Cabo:", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
+                            cabo_sel = sub_cols[1].selectbox(f"Cabo ({tipo}):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
                             vao_sel = sub_cols[2].number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
-                            esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
+                            esforco, _ = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
                         else: 
                             opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
                             fases_sel = sub_cols[0].selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
                             db_filtrado = [c for c in db if c['FASES'] == fases_sel]
                             opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
-                            cabo_sel = sub_cols[1].selectbox("Cabo:", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
+                            cabo_sel = sub_cols[1].selectbox(f"Cabo ({tipo}):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
                             vao_sel = sub_cols[2].number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
-                            esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
+                            esforco, _ = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
 
                         if esforco is not None:
                             esforco_total_direcao += esforco
@@ -278,6 +279,8 @@ def create_ui():
         if submitted:
             st.session_state.resultados = []
             for poste_data in all_postes_data:
+                if not poste_data['nome_poste']: continue # Pula postes sem nome
+                
                 resultante_mag, resultante_angulo, grafico_buffer = plotar_e_salvar_grafico(poste_data['direcoes'], poste_data['nome_poste'])
                 poste_rec = recomendar_poste(resultante_mag, poste_data['tem_compacta'])
                 
@@ -316,7 +319,15 @@ def create_ui():
         st.markdown("---")
         st.header("Relatório Final Consolidado")
         
-        df_resultados = pd.DataFrame([r for r in st.session_state.resultados if 'grafico_buffer' in r.keys() and r.pop('grafico_buffer')])
+        # Prepara o DataFrame para exportação, removendo o buffer de imagem
+        df_export_data = []
+        for res in st.session_state.resultados:
+            # Cria uma cópia para não modificar o dicionário original no loop
+            export_item = res.copy()
+            export_item.pop('grafico_buffer', None)
+            df_export_data.append(export_item)
+            
+        df_resultados = pd.DataFrame(df_export_data)
         st.dataframe(df_resultados)
         
         output = BytesIO()
@@ -331,6 +342,6 @@ def create_ui():
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             key="download_excel"
         )
-
+        
 if __name__ == "__main__":
     create_ui()
