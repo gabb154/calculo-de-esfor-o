@@ -184,19 +184,16 @@ DB_POSTES = [
 ]
 
 # Unifica todos os bancos de dados de cabos para facilitar a busca
-TODOS_OS_CABOS = {
-    'COMPACTA': DB_COMPACTA,
-    'SECUNDARIA': DB_SECUNDARIA,
-    'ILUMINACAO PUBLICA': DB_ILUMINACAO
-}
-
-
 PADROES_ESFORCO = [400, 600, 1000, 1500]
 TODOS_OS_CABOS = {
     'COMPACTA': DB_COMPACTA,
     'SECUNDARIA': DB_SECUNDARIA,
     'ILUMINACAO PUBLICA': DB_ILUMINACAO
 }
+
+
+
+
 
 def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     opcoes_cabo_filtrado = [c for c in db if c['CABO'] == cabo_selecionado and all(c.get(k) == v for k, v in kwargs.items())]
@@ -348,3 +345,4 @@ if 'resultados_finais' in st.session_state and st.session_state.resultados_finai
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         key="download_relatorio_excel"
     )
+
