@@ -237,7 +237,7 @@ def plotar_e_salvar_grafico(direcoes, nome_poste):
     return resultante_mag, resultante_angulo, buf
 
 st.set_page_config(layout="wide", page_title="Calculadora de Esforços em Poste")
-st.title("Calculadora de Esforços em Poste (Bridge Energia)")
+st.title("⚡Calculadora de Esforços em Poste (Bridge Energia)")
 
 if 'postes' not in st.session_state:
     st.session_state.postes = []
