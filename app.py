@@ -191,10 +191,6 @@ TODOS_OS_CABOS = {
     'ILUMINACAO PUBLICA': DB_ILUMINACAO
 }
 
-
-
-
-
 def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     opcoes_cabo_filtrado = [c for c in db if c['CABO'] == cabo_selecionado and all(c.get(k) == v for k, v in kwargs.items())]
     opcoes_vao_validas = [c for c in opcoes_cabo_filtrado if c['VAO_M'] >= vao_usuario]
@@ -202,6 +198,12 @@ def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
         return None, None
     linha_selecionada = min(opcoes_vao_validas, key=lambda x: x['VAO_M'])
     return linha_selecionada['Y_DAN'], linha_selecionada['VAO_M']
+
+def recomendar_esforco_padrao(esforco_resultante):
+    for esforco_padrao in PADROES_ESFORCO:
+        if esforco_resultante <= esforco_padrao:
+            return esforco_padrao
+    return PADROES_ESFORCO[-1]
 
 def plotar_e_salvar_grafico(direcoes, nome_poste):
     fig, ax = plt.subplots(figsize=(8, 8))
@@ -305,11 +307,13 @@ if st.button("Calcular Todos os Postes"):
         st.markdown(f"---")
         st.subheader(f"Resultados para o Poste: '{nome_poste}'")
         resultante_mag, resultante_angulo, grafico_buffer = plotar_e_salvar_grafico(poste_data['direcoes'], nome_poste)
+        esforco_recomendado = recomendar_esforco_padrao(resultante_mag)
         col1, col2 = st.columns(2)
         with col1:
             st.metric(label="Força Resultante Calculada", value=f"{resultante_mag:.2f} daN")
+            st.metric(label="Esforço Padrão Recomendado", value=f"{esforco_recomendado} daN")
             st.metric(label="Ângulo da Resultante", value=f"{resultante_angulo:.2f}°")
-            st.subheader("Esforço padrão dos postes (daN):")
+            st.subheader("Esforços padrão disponíveis:")
             for esforco_padrao in PADROES_ESFORCO:
                 st.write(f"- {esforco_padrao} daN")
         with col2:
@@ -327,6 +331,7 @@ if st.button("Calcular Todos os Postes"):
             relatorio_poste[f'Ângulo Direção {j+1} (°)'] = f"{direcao['angulo']:.1f}"
         relatorio_poste['Resultante Final (daN)'] = f"{resultante_mag:.2f}"
         relatorio_poste['Ângulo da Resultante (°)'] = f"{resultante_angulo:.1f}"
+        relatorio_poste['Esforço Padrão Recomendado'] = f"{esforco_recomendado} daN"
         st.session_state.resultados_finais.append(relatorio_poste)
 
 if 'resultados_finais' in st.session_state and st.session_state.resultados_finais:
@@ -345,4 +350,3 @@ if 'resultados_finais' in st.session_state and st.session_state.resultados_finai
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         key="download_relatorio_excel"
     )
-
