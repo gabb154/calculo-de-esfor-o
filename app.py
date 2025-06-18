@@ -191,10 +191,6 @@ TODOS_OS_CABOS = {
 }
 
 
-# ==============================================================================
-# LÓGICA DO APLICATIVO WEB COM STREAMLIT
-# ==============================================================================
-
 def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     opcoes_cabo_filtrado = [c for c in db if c['CABO'] == cabo_selecionado and all(c.get(k) == v for k, v in kwargs.items())]
     opcoes_vao_validas = [c for c in opcoes_cabo_filtrado if c['VAO_M'] >= vao_usuario]
@@ -280,22 +276,22 @@ for i in range(num_postes):
         for tipo in tipos_de_cabo_str:
             with st.expander(f"Dados para cabo {tipo} na Direção {j+1}"):
                 db = TODOS_OS_CABOS[tipo]
-
+                # --- Dinâmico para COMPACTA ---
                 if tipo == 'COMPACTA':
                     tem_compacta_poste = True
                     opcoes_tensao = sorted(list(set(c['TENSAO'] for c in db)))
                     tensao_sel = st.selectbox("Tensão:", opcoes_tensao, key=f"tensao_{i}_{j}_{tipo}")
-                    db_filtrado = [c for c in db if c['TENSAO'] == tensao_sel]
-                    opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
+                    db_tensao = [c for c in db if c['TENSAO'] == tensao_sel]
+                    opcoes_cabo = sorted(list(set(c['CABO'] for c in db_tensao)))
                     cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
                     vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
                     esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
-
-                else: # SECUNDARIA ou ILUMINACAO
+                # --- Dinâmico para SECUNDARIA/ILUMINACAO ---
+                else:
                     opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
                     fases_sel = st.selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
-                    db_filtrado = [c for c in db if c['FASES'] == fases_sel]
-                    opcoes_cabo = sorted(list(set(c['CABO'] for c in db_filtrado)))
+                    db_fase = [c for c in db if c['FASES'] == fases_sel]
+                    opcoes_cabo = sorted(list(set(c['CABO'] for c in db_fase)))
                     cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
                     vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
                     esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, FASES=fases_sel)
