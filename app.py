@@ -191,6 +191,13 @@ TODOS_OS_CABOS = {
 }
 
 
+PADROES_ESFORCO = [400, 600, 1000, 1500]
+TODOS_OS_CABOS = {
+    'COMPACTA': DB_COMPACTA,
+    'SECUNDARIA': DB_SECUNDARIA,
+    'ILUMINACAO PUBLICA': DB_ILUMINACAO
+}
+
 def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     opcoes_cabo_filtrado = [c for c in db if c['CABO'] == cabo_selecionado and all(c.get(k) == v for k, v in kwargs.items())]
     opcoes_vao_validas = [c for c in opcoes_cabo_filtrado if c['VAO_M'] >= vao_usuario]
@@ -198,19 +205,6 @@ def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
         return None, None
     linha_selecionada = min(opcoes_vao_validas, key=lambda x: x['VAO_M'])
     return linha_selecionada['Y_DAN'], linha_selecionada['VAO_M']
-
-def recomendar_poste(esforco_requerido, tem_compacta):
-    esforco_final_para_busca = max(esforco_requerido, 400)
-    postes_disponiveis = DB_POSTES
-    if tem_compacta:
-        postes_filtrados_altura = [p for p in postes_disponiveis if p['Altura_m'] >= 12]
-    else:
-        postes_filtrados_altura = [p for p in postes_disponiveis if p['Altura_m'] >= 9]
-    postes_adequados = [p for p in postes_filtrados_altura if p['Resistencia_daN'] >= esforco_final_para_busca]
-    if not postes_adequados:
-        return f"Nenhum poste com altura requerida suporta {esforco_final_para_busca:.2f} daN."
-    poste_recomendado = min(postes_adequados, key=lambda x: x['Resistencia_daN'])
-    return f"{poste_recomendado['Codificacao']} ({poste_recomendado['Resistencia_daN']} daN)"
 
 def plotar_e_salvar_grafico(direcoes, nome_poste):
     fig, ax = plt.subplots(figsize=(8, 8))
@@ -276,7 +270,6 @@ for i in range(num_postes):
         for tipo in tipos_de_cabo_str:
             with st.expander(f"Dados para cabo {tipo} na Direção {j+1}"):
                 db = TODOS_OS_CABOS[tipo]
-                # --- Dinâmico para COMPACTA ---
                 if tipo == 'COMPACTA':
                     tem_compacta_poste = True
                     opcoes_tensao = sorted(list(set(c['TENSAO'] for c in db)))
@@ -286,7 +279,6 @@ for i in range(num_postes):
                     cabo_sel = st.selectbox("Cabo (bitola):", opcoes_cabo, key=f"cabo_{i}_{j}_{tipo}")
                     vao_sel = st.number_input("Vão (m):", min_value=1, step=1, key=f"vao_{i}_{j}_{tipo}")
                     esforco, vao_usado = find_effort(db, vao_sel, cabo_sel, TENSAO=tensao_sel)
-                # --- Dinâmico para SECUNDARIA/ILUMINACAO ---
                 else:
                     opcoes_fases = sorted(list(set(c['FASES'] for c in db)))
                     fases_sel = st.selectbox("Fases:", opcoes_fases, key=f"fases_{i}_{j}_{tipo}")
@@ -316,14 +308,13 @@ if st.button("Calcular Todos os Postes"):
         st.markdown(f"---")
         st.subheader(f"Resultados para o Poste: '{nome_poste}'")
         resultante_mag, resultante_angulo, grafico_buffer = plotar_e_salvar_grafico(poste_data['direcoes'], nome_poste)
-        poste_rec = "Nenhum esforço aplicado."
-        if resultante_mag > 0:
-            poste_rec = recomendar_poste(resultante_mag, poste_data['tem_compacta'])
         col1, col2 = st.columns(2)
         with col1:
             st.metric(label="Força Resultante Calculada", value=f"{resultante_mag:.2f} daN")
             st.metric(label="Ângulo da Resultante", value=f"{resultante_angulo:.2f}°")
-            st.success(f"**Poste Recomendado:** {poste_rec}")
+            st.subheader("Esforço padrão dos postes (daN):")
+            for esforco_padrao in PADROES_ESFORCO:
+                st.write(f"- {esforco_padrao} daN")
         with col2:
             st.image(grafico_buffer, caption=f"Diagrama Vetorial para '{nome_poste}'")
             st.download_button(
@@ -339,7 +330,6 @@ if st.button("Calcular Todos os Postes"):
             relatorio_poste[f'Ângulo Direção {j+1} (°)'] = f"{direcao['angulo']:.1f}"
         relatorio_poste['Resultante Final (daN)'] = f"{resultante_mag:.2f}"
         relatorio_poste['Ângulo da Resultante (°)'] = f"{resultante_angulo:.1f}"
-        relatorio_poste['Poste Recomendado'] = poste_rec
         st.session_state.resultados_finais.append(relatorio_poste)
 
 if 'resultados_finais' in st.session_state and st.session_state.resultados_finais:
