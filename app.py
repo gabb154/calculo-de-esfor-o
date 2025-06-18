@@ -200,7 +200,6 @@ def find_effort(db, vao_usuario, cabo_selecionado, **kwargs):
     return linha_selecionada['Y_DAN'], linha_selecionada['VAO_M']
 
 def recomendar_esforco_padrao(esforco_resultante):
-    # Retorna o menor PADRÃO acima ou igual ao valor calculado
     for esforco_padrao in PADROES_ESFORCO:
         if esforco_resultante <= esforco_padrao:
             return esforco_padrao
